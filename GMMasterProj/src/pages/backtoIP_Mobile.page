@@ -1,0 +1,34 @@
+<apex:page standardController="Performance_Framework__c">
+
+<script>
+
+window.onload= loadValues();
+function loadValues(){
+    
+Var testCRMONLY;
+//var Affrecords = sforce.connection.query("SELECT Id,Implementation_Period__c from Performance_Framework__c"); 
+
+//var Affresults = Affrecords.getArray('records');
+
+    var urlc ='/GM/Performance_Framework__c.Implementation_Period__c'; 
+    
+    var urlLFA ='/LFA/Performance_Framework__c.Implementation_Period__c'; 
+    
+    var url ='/'+'{!Performance_Framework__c.Implementation_Period__c}'; 
+    
+    if('{!$User.ContactId}'== ''){ 
+    
+    sforce.one.navigateToURL(url);
+    //window.parent.open(url, "_self"); 
+    } 
+    else{ 
+    if({!CONTAINS($Profile.Name, 'LFA')}){ 
+    window.parent.open(urlLFA, "_self"); 
+    }else{ 
+    
+    window.parent.open(urlc, "_self"); 
+    } 
+    }
+}
+    </script>
+</apex:page>

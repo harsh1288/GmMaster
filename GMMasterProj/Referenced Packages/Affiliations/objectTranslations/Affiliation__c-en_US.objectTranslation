@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Affiliation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Affiliations</value>
+    </caseValues>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>Contact__c</name>
+        <relationshipLabel><!-- Organization Affiliations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>EndDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Organization --></label>
+        <name>Organization__c</name>
+        <relationshipLabel><!-- Affiliated Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Role --></label>
+        <name>Role__c</name>
+        <picklistValues>
+            <masterLabel>Additional Support / Assistant</masterLabel>
+            <translation><!-- Additional Support / Assistant --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Admin Focal Point</masterLabel>
+            <translation><!-- Admin Focal Point --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Advisor</masterLabel>
+            <translation><!-- Advisor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation><!-- Alternate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Member</masterLabel>
+            <translation><!-- Alternate Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Assistant manager</masterLabel>
+            <translation><!-- Assistant manager --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Chair</masterLabel>
+            <translation><!-- Chair --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Delegate</masterLabel>
+            <translation><!-- Delegate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Delegation Member</masterLabel>
+            <translation><!-- Delegation Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Expert</masterLabel>
+            <translation><!-- Expert --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Focal Point</masterLabel>
+            <translation><!-- Focal Point --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former Member</masterLabel>
+            <translation><!-- Former Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>General manager</masterLabel>
+            <translation><!-- General manager --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Head of Delegation</masterLabel>
+            <translation><!-- Head of Delegation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Implementer</masterLabel>
+            <translation><!-- Implementer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Independent</masterLabel>
+            <translation><!-- Independent --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Leader</masterLabel>
+            <translation><!-- Leader --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Member</masterLabel>
+            <translation><!-- Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Non Member</masterLabel>
+            <translation><!-- Non Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not Defined</masterLabel>
+            <translation><!-- Not Defined --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Observer</masterLabel>
+            <translation><!-- Observer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Permanent Member</masterLabel>
+            <translation><!-- Permanent Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Signatory authority</masterLabel>
+            <translation><!-- Signatory authority --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Support Group Member</masterLabel>
+            <translation><!-- Support Group Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TA Provider</masterLabel>
+            <translation><!-- TA Provider --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Team Leader</masterLabel>
+            <translation><!-- Team Leader --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vice Chair</masterLabel>
+            <translation><!-- Vice Chair --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation><!-- Current --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation><!-- Former --></translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Affiliation Layout</layout>
+        <sections>
+            <label><!-- Affiliation Information --></label>
+            <section>Affiliation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Affiliation Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

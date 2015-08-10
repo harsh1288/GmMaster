@@ -1,0 +1,93 @@
+<apex:page standardController="Performance_Framework__c">
+<apex:includeScript value="/soap/ajax/29.0/connection.js"/>
+ <apex:includeScript value="/soap/ajax/29.0/apex.js"/>
+
+<script>
+//Posted a header
+window.onload= loadValues();
+function loadValues(){
+ sforce.connection.sessionId = "{!$Api.Session_ID}";    
+
+var PerStatus = new sforce.SObject("Performance_Framework__c"); 
+PerStatus.Id = "{! Performance_Framework__c.Id}";
+var GIPId ="{! Performance_Framework__c.Implementation_Period__c}";
+//window.alert(GIPId); 
+//var BudStatus = new sforce.SObject("Performance_Framework__c"); 
+var BudStatus  = "{!Performance_Framework__c.Id}"; 
+var records = sforce.connection.query("SELECT Implementation_Period__r.Approval_Status__c,Id from Performance_Framework__c where id ='"+BudStatus+"' limit 1"); 
+var results = records.getArray('records'); 
+//alert(results);
+var variable; //NOW
+//No test variables should be created.
+
+
+
+//some changes.more.few mre changes
+
+//test 
+
+//Harsh is adding
+
+
+
+if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
+{ 
+alert('PR Information Form and Grant Form must be approved to accept Performance Framework.'); 
+} 
+else 
+{ 
+var HPC = sforce.connection.query("SELECT Id from HPC_Framework__c where Grant_Implementation_Period__c = '"+GIPId+"' "); 
+
+var HPCrecords = HPC.getArray("records"); 
+//alert(HPCrecords);
+
+var recType = sforce.connection.query("SELECT name,Id from RecordType where name = 'Accepted' AND SobjectType = 'Performance_Framework__c'"); 
+
+var recTyperecords = recType.getArray("records"); 
+
+
+PerStatus.RecordTypeId = recTyperecords[0].Id; 
+PerStatus.HPC_Framework_Id__c = HPCrecords[0].Id;
+PerStatus.PF_Status__c = "{!$Label.PF_Status_Accpeted}"; 
+PerStatus.Performance_Framework_Status__c = "{!$Label.PF_Status_Accpeted}"; 
+PerStatus.Last_Submitted_By__c = "{!$User.Id}"; 
+PerStatus.Last_Submitted_Dummy__c = "{!$User.Id}"; 
+var pfRec = sforce.connection.query("SELECT name,Id,Is_Changed_Submitted__c from Performance_Framework__c where id= '{!Performance_Framework__c.Id}'"); 
+
+var pfRecVar = pfRec.getArray("records");
+
+if(pfRecVar[0].Is_Changed_Submitted__c == 'true'){
+var cnf = confirm("{!$Label.PF_Accept_Popup_Changes}"); 
+
+
+if(cnf==true) 
+{ 
+var t=sforce.connection.update([PerStatus]);
+var url ='/'+'{!Performance_Framework__c.Id}'; 
+sforce.one.navigateToURL(url);
+
+location.reload(true); //reload screen to reflect changes
+}
+}else{
+//var cnf = confirm("{!$Label.PF_Accept_Popup_Unchanged}"); 
+//if(cnf==true) 
+//{ 
+var t=sforce.connection.update([PerStatus]); 
+//alert(PerStatus);
+var url ='/'+'{!Performance_Framework__c.Id}'; 
+sforce.one.navigateToURL(url);
+
+location.reload(true); //reload screen to reflect changes
+//}
+}
+}
+}
+
+//Last line: Harsh Chaturvedi
+
+
+ //Last line: MOdiefied by Harsha
+
+
+    </script>
+</apex:page>
