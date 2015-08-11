@@ -85,9 +85,5 @@ location.reload(true); //reload screen to reflect changes
 
 //Last line: Harsh Chaturvedi
 
-
- //Last line: MOdiefied by Harsha
-
-
     </script>
 </apex:page>
