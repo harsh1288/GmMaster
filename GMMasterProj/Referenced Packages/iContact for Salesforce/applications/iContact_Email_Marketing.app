@@ -10,10 +10,4 @@
     <tab>standard-Dashboard</tab>
     <tab>iContact_Help</tab>
     <tab>iContact_MessageBuilder</tab>
-    <tab>Reporting_Period_Detail__c</tab>
-    <tab>CommunityRedirect</tab>
-    <tab>Milestone_RP_Junction__c</tab>
-    <tab>Concept_Note</tab>
-    <tab>Grant_Making</tab>
-    <tab>Grant_Indicator__c</tab>
 </CustomApplication>

@@ -60,7 +60,6 @@
     <enableReports>false</enableReports>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
     <fields>
         <fullName>Body_HTML__c</fullName>
         <deprecated>false</deprecated>
@@ -766,8 +765,16 @@ The date/time of the most recent statistics update for this message.</descriptio
     <label>iContact Sent Message</label>
     <listViews>
         <fullName>All</fullName>
+        <columns>OBJECT_ID</columns>
+        <columns>NAME</columns>
+        <columns>Delivered__c</columns>
+        <columns>iContact_Send_ID__c</columns>
+        <columns>Sent_to__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>UPDATEDBY_USER</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+        <language>en_US</language>
     </listViews>
     <nameField>
         <label>Message Subject</label>
