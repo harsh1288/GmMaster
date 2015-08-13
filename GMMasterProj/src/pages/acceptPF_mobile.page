@@ -24,20 +24,6 @@ var variable; //NOW
 
 //some changes.more.few mre changes
 
-
-//test. This is a comment to conflict.
-  
-//test harsh added some new comments.
-
-
-
-//Harsh started a new piece of work.
-
-//Harsh is adding a little more changes into his dev work. // This is the change added by Harsha.
-
-
-
-
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
 alert('PR Information Form and Grant Form must be approved to accept Performance Framework.'); 
@@ -91,9 +77,8 @@ location.reload(true); //reload screen to reflect changes
 }
 }
 
-//Last line: Harsh Chaturvedi
-// This is a comment to conflict.
-//To be or not
+//*** This is a comment to conflict.***
+
 
 
     </script>
