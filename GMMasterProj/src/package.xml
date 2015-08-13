@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <types>
-        <members>acceptPF_mobile</members>
-        <members>backtoIP_Mobile</members>
-        <name>ApexPage</name>
-    </types>
-    <version>34.0</version>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types>
+ers>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types><version>34.0</version>
 </Package>
