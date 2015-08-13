@@ -11,4 +11,8 @@ packageName=unpackaged
 preferToolingDeployment=true
 projectIdentifier=IDE-2394068584006988113
 readTimeout=400
+<<<<<<< HEAD
 username=harsha.shashikant@theglobalfund.org.crmpro
+=======
+username=harsh.chaturvedi1@theglobalfund.org
+>>>>>>> branch 'GMSprint6' of https://github.com/harsh1288/GmMaster.git
