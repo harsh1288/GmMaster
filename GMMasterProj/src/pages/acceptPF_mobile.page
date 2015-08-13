@@ -24,6 +24,12 @@ var variable; //NOW
 
 //some changes.more.few mre changes
 
+//test 
+
+//Harsh is adding
+
+
+
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
 alert('PR Information Form and Grant Form must be approved to accept Performance Framework.'); 
@@ -77,8 +83,7 @@ location.reload(true); //reload screen to reflect changes
 }
 }
 
-//*** This is a comment to conflict.***
-
+ // Does this show up?
 
 
     </script>
