@@ -18,6 +18,7 @@ var records = sforce.connection.query("SELECT Implementation_Period__r.Approval_
 var results = records.getArray('records'); 
 //alert(results);
 var variable; //NOW
+
 //No test variables should be created.
 
 
@@ -26,11 +27,16 @@ var variable; //NOW
 
 
 //test. This is a comment to conflict.
-
+  
 //test harsh added some new comments.
 
 
-//Harsh is adding a little more changes into his dev work.
+
+//Harsh started a new piece of work.
+
+//Harsh is adding a little more changes into his dev work. // This is the change added by Harsha.
+
+
 
 
 
@@ -87,10 +93,6 @@ location.reload(true); //reload screen to reflect changes
 }
 }
 
-//Last line: Harsh Chaturvedi
-// This is a comment to conflict.
-//To be or not
-
-
+//Welcome.
     </script>
 </apex:page>
