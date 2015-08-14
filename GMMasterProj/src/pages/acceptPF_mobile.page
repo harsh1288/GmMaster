@@ -11,7 +11,7 @@ function loadValues(){
 var PerStatus = new sforce.SObject("Performance_Framework__c"); 
 PerStatus.Id = "{! Performance_Framework__c.Id}";
 var GIPId ="{! Performance_Framework__c.Implementation_Period__c}";
-//window.alert(GIPId); 
+//window.alert(GIPId);  
 //var BudStatus = new sforce.SObject("Performance_Framework__c"); 
 var BudStatus  = "{!Performance_Framework__c.Id}"; 
 var records = sforce.connection.query("SELECT Implementation_Period__r.Approval_Status__c,Id from Performance_Framework__c where id ='"+BudStatus+"' limit 1"); 
@@ -21,9 +21,14 @@ var variable; //NOW
 
 //No test variables should be created.
 
+  
+
+//some changes.more.few mre changes 
 
 
-//some changes.more.few mre changes
+//test. This is a comment to conflict. 
+  
+//test harsh added some new comments. new changes
 
 
 //test. This is a comment to conflict.
@@ -31,11 +36,14 @@ var variable; //NOW
 //test harsh added some new comments.
 
 
-
 //Harsh started a new piece of work.
 
 //Harsh is adding a little more changes into his dev work. // This is the change added by Harsha.
 
+
+//Harsh started a new piece of work.
+
+//Harsh is adding a little more changes into his dev work. // This is the change added by Harsha.
 
 
 
