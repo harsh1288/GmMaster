@@ -55,6 +55,7 @@
     <enableReports>true</enableReports>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
     <fields>
         <fullName>Contact__c</fullName>
         <deprecated>false</deprecated>
@@ -65,7 +66,7 @@
         <relationshipName>Affiliations</relationshipName>
         <relationshipOrder>1</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
@@ -74,10 +75,9 @@
         <fullName>Description__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <inlineHelpText>max 32,000 characters</inlineHelpText>
         <label>Description</label>
         <length>32000</length>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>6</visibleLines>
@@ -88,7 +88,7 @@
         <externalId>false</externalId>
         <label>End Date</label>
         <required>false</required>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
@@ -102,7 +102,7 @@
         <relationshipName>Affiliations</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
@@ -125,7 +125,7 @@
         <externalId>false</externalId>
         <label>Start Date</label>
         <required>false</required>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
@@ -145,7 +145,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -153,49 +153,11 @@
     <nameField>
         <displayFormat>AF-{000000}</displayFormat>
         <label>Affiliation Name</label>
-        <trackHistory>true</trackHistory>
+        <trackHistory>false</trackHistory>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Affiliations</pluralLabel>
     <recordTypeTrackHistory>false</recordTypeTrackHistory>
-    <searchLayouts>
-        <customTabListAdditionalFields>StartDate__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>EndDate__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Organization__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Contact__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Role__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Access_Level__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>RECORDTYPE</customTabListAdditionalFields>
-        <lookupDialogsAdditionalFields>Organization__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Contact__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Role__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Access_Level__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>RECORDTYPE</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Organization__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Contact__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Role__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Status__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Access_Level__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>RECORDTYPE</lookupPhoneDialogsAdditionalFields>
-        <searchFilterFields>NAME</searchFilterFields>
-        <searchFilterFields>StartDate__c</searchFilterFields>
-        <searchFilterFields>EndDate__c</searchFilterFields>
-        <searchFilterFields>Organization__c</searchFilterFields>
-        <searchFilterFields>Contact__c</searchFilterFields>
-        <searchFilterFields>Role__c</searchFilterFields>
-        <searchFilterFields>Status__c</searchFilterFields>
-        <searchFilterFields>Access_Level__c</searchFilterFields>
-        <searchFilterFields>RECORDTYPE</searchFilterFields>
-        <searchResultsAdditionalFields>StartDate__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>EndDate__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Organization__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Contact__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Role__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Access_Level__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>RECORDTYPE</searchResultsAdditionalFields>
-    </searchLayouts>
+    <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

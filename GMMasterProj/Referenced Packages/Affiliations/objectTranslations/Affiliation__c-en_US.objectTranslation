@@ -14,7 +14,6 @@
         <relationshipLabel><!-- Organization Affiliations --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- max 32,000 characters --></help>
         <label><!-- Description --></label>
         <name>Description__c</name>
     </fields>
