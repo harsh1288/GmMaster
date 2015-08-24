@@ -19,7 +19,7 @@ var results = records.getArray('records');
 //alert(results);
 var variable; //NOW
 
-//No test variables should be created.
+//No lines should be created.
 
   
 
