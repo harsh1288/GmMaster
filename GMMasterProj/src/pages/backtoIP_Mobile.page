@@ -16,6 +16,8 @@ Var testCRMONLY;
     
     var url ='/'+'{!Performance_Framework__c.Implementation_Period__c}'; 
     
+    var lfaAccess; //New variable
+    
     if('{!$User.ContactId}'== ''){ 
     
     sforce.one.navigateToURL(url);
