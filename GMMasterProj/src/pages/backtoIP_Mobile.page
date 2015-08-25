@@ -17,6 +17,7 @@ Var testCRMONLY;
     var url ='/'+'{!Performance_Framework__c.Implementation_Period__c}'; 
     
     var lfaAccess; //New variable
+    var onlyRegardinfSpA5; // new var 
     
     if('{!$User.ContactId}'== ''){ 
     
