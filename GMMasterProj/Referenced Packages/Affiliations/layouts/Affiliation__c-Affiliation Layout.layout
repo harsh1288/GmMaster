@@ -49,6 +49,10 @@
                 <behavior>Readonly</behavior>
                 <field>Create_User__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Contact_s_access_to_Salesforce_GMP__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

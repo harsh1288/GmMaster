@@ -18,9 +18,14 @@ var records = sforce.connection.query("SELECT Implementation_Period__r.Approval_
 var results = records.getArray('records'); 
 //alert(results);
 var variable; //NOW
+var testVariable;
+
 
 
 //No lines should be created.New changes for Sprint6 by GM Workstream.
+
+//No lines should be created.Comment modified by Harsha.
+
 
 //There is a new comment here. 
 
