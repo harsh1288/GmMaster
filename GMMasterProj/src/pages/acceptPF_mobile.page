@@ -90,7 +90,7 @@ var pfRecVar = pfRec.getArray("records");
 
 if(pfRecVar[0].Is_Changed_Submitted__c == 'true'){
 var cnf = confirm("{!$Label.PF_Accept_Popup_Changes}"); 
-
+//  new values 18/09
 
 if(cnf==true) 
 { 
