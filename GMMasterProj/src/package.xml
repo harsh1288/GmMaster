@@ -4,9 +4,6 @@
         <members>acceptPF_mobile</members>
         <name>ApexPage</name>
     </types>
-    <types>
-        <members>*</members>
-        <name>ApexClass</name>
-    </types>
+    
     <version>34.0</version>
 </Package>
