@@ -20,13 +20,6 @@ var results = records.getArray('records');
 var variable; //NOW
 var testVariable;
 
-
-
-//No lines should be created.New changes for Sprint6 by GM Workstream.
-
-//No lines should be created.Comment modified by Harsha.
-
-
 //There is a new comment here. 
 
  
