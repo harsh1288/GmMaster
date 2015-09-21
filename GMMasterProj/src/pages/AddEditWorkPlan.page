@@ -1,0 +1,1889 @@
+<!--*******************************************************************************
+* VisualForce {Page}: {AddEditWorkPlan}
+* DateCreated  : 06/18/2013
+----------------------------------------------------------------------------------
+* Purpose:
+* - AddEditWorkplan page used for add/Edit workplan details.
+  - Also for add/edit/delete releted services and its resources.
+  - This page opens from 'Work Plan Detail' button of Workplan object.
+----------------------------------------------------------------------------------
+* History:
+* - VERSION  DEVELOPER NAME    DATE            DETAIL FEATURES
+    1.0                       06/18/2013     INITIAL DEVELOPMENT
+********************************************************************************-->
+<apex:page id="page" standardController="LFA_Work_Plan__c" sidebar="false" extensions="ctrlAddEditWorkPlan">
+<apex:includeScript value="{!URLFOR($Resource.ScrollJS,'Scrolljs/jquery.min.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.ScrollJS,'Scrolljs/jquery.nicescroll.min.js')}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+<script src="{!URLFOR($Resource.CharCounter)}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+                
+        $('.countable1').jqEasyCounter({
+            'maxChars': 330,
+            'maxCharsWarning': 325
+        });
+        
+        $('.countable2').jqEasyCounter({
+            'maxChars': 255,
+            'maxCharsWarning': 240,
+            'msgFontSize': '12px',
+            'msgFontColor': '#000',
+            'msgFontFamily': 'Arial',
+            'msgTextAlign': 'left',
+            'msgWarningColor': '#F00',
+            'msgAppendMethod': 'insertBefore'               
+        });
+       
+    });
+</script>
+    <style>
+        .searchBox{
+            height: 300px;
+            overflow: scroll !important;
+            display: inline-block;
+            width:100%;
+        }
+        .odd:hover, .even:hover{
+            background-color: #E3F3FF !important;
+        }
+        body .bRelatedList .pbBody table.list, body .apexp .pbBody table.list {
+            border: 0px solid #000000;
+            padding:0px;
+        }
+        .headerRowUpperCE{
+            border:1px solid #E0E3E5 !important;
+            font-weight:bold;
+            background-color:#7f7f7f !important;
+            color:white !important;
+        }
+        .headerRowUpper{
+            border:1px solid #E0E3E5 !important;
+            font-weight:bold;
+            background-color:#7f7f7f !important;
+            color:white !important;
+        }
+        
+        .headerRowLower{
+            border:1px solid #E0E3E5 !important;
+            font-weight:bold;
+            background-color:#558ED5 !important;
+            color:white !important;
+            white-space: normal !important;
+        }
+        .headerRowResource{
+            border:1px solid #E0E3E5 !important;
+            font-weight:bold;
+            background-color:orange !important;
+        }
+        .totalRow{
+            border-top:1px;
+            font-weight:bold !important;
+        }
+        .totalRowMinMaxAvg{
+            border-top:1px;
+            text-align:right;
+            padding-right:10px;
+        }
+        .noBorder ,table.noBorder tr td,table.noBorder td{
+            border: 0px !important;
+            padding: 0px;
+        }
+        .headerColor{
+            background-color:#4f81bd !important;
+            color:white !important;
+            font-weight:bold;
+        }
+        .headerColorSearchGrid{
+            background-color:#4f81bd !important;
+            border:1px solid #E0E3E5 !important;
+            background-color:#558ed5 !important;
+            color:white !important;
+            font-weight:bold;
+            white-space: pre-wrap !important;
+        }
+        .resourcetTable{
+            vertical-align:top;
+        }
+        .blankCell{
+            width:5px;
+        }
+        .picklist{
+            width:200px !important;
+        }
+        .yearPicklist{
+            width:70px;
+        }
+        .AddLink{
+            padding-left:18px;
+        }
+        .Image{
+            cursor:pointer;
+            padding-left:8px;
+            height:13px;
+            width:13px;
+            vertical-align:middle;
+        }
+        .ImageResource{
+            cursor:pointer;
+            padding-bottom: 5px;
+            padding-left: 4px;
+            height:13px;
+            width:13px;
+        }
+        .ImageSearch{
+            cursor:pointer;
+            float:left;
+            height:13px;
+            width:13px;
+            vertical-align:middle;
+        }
+        .CollapseExpandAllText{
+            font-size: 12px;
+            font-weight: normal;
+            vertical-align:top;
+        }
+        .CollapseExpandAllImage{
+            cursor:pointer;
+            height:20px;
+            width:20px;
+        }
+        .HeaderFreez{  
+            position:relative ;   
+            top:expression(this.offsetParent.scrollTop);  
+            z-index: 10;  
+        }
+        .box_rotate {          
+            -moz-transform: rotate(90deg);  /* FF3.5+ */
+            -o-transform: rotate(90deg);  /* Opera 10.5 */
+            -webkit-transform: rotate(90deg);  /* Saf3.1+, Chrome */
+            filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=1.083);  /* IE6,IE7 */
+            -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1.083)"; /* IE8 */
+        } 
+        .box_CT {
+            margin-left: -63px;
+            margin-right: -64px;
+            background-color: #7f7f7f;
+            color:white !important;
+            margin-top: 63px;
+            padding: 5px;
+            white-space: nowrap;
+            width: 140px;
+        }
+        .box_CT_IE {
+            margin-left: -3px !important;
+            margin-right: -148px !important;
+        }
+        .box_TGF{
+            margin-left: -63px;
+            margin-right: -64px;
+            background-color: #7f7f7f;
+            color:white !important;
+            margin-top: 63px;
+            padding: 5px;
+            white-space: nowrap;
+            width: 140px;
+        }
+        .DescPopup { 
+            /*width:230px; 
+            height:160px; */
+            padding:10px;
+            background: white; 
+            border: 4px solid #c2e1f5; 
+            z-index: 97;   
+            position: absolute; 
+            left:10%;
+            margin-left: -160px;
+            margin-top: -73px;
+        } 
+        .DescPopup:after, .DescPopup:before { 
+            top: 100%; border: solid transparent; content: " "; 
+            height: 0; width: 0; position: absolute; pointer-events: none;
+        } 
+        .DescPopup:after { border-color: rgba(136, 183, 213, 0); border-top-color: white; 
+            border-width: 30px; left: 50%; margin-left: -30px; } 
+        .DescPopup:before { border-color: rgba(194, 225, 245, 0); 
+            border-top-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; 
+        }
+         .DescServicePopupClone { 
+            padding:10px;
+            background: #FFF4DB; 
+            border: 4px solid #c2e1f5; 
+            z-index: 97;   
+            position: absolute; 
+            left:10%;
+            margin-left: 20px;
+            margin-top: -73px;
+        } 
+        .DescServicePopupClone:after, .DescServicePopupClone:before { 
+            top: 100%; border: solid transparent; content: " "; 
+            height: 0; width: 0; position: absolute; pointer-events: none;
+        } 
+        .DescServicePopupClone:after { border-color: rgba(136, 183, 213, 0); border-top-color: #FFF4DB; 
+            border-width: 30px; left: 50%; margin-left: -30px; } 
+        .DescServicePopupClone:before { border-color: rgba(194, 225, 245, 0); 
+            border-top-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; 
+        }
+        
+        .DescServicePopupHasResource { 
+            padding:10px;
+            background: #FFF4DB; 
+            border: 4px solid #c2e1f5; 
+            z-index: 97;   
+            position: absolute; 
+            left:10%;
+            margin-left: 60px;
+            margin-top: -73px;
+        } 
+        .DescServicePopupHasResource:after, .DescServicePopupHasResource:before { 
+            top: 100%; border: solid transparent; content: " "; 
+            height: 0; width: 0; position: absolute; pointer-events: none;
+        } 
+        .DescServicePopupHasResource:after { border-color: rgba(136, 183, 213, 0); border-top-color: #FFF4DB; 
+            border-width: 30px; left: 50%; margin-left: -30px; } 
+        .DescServicePopupHasResource:before { border-color: rgba(194, 225, 245, 0); 
+            border-top-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; 
+        }
+        .DescServicePopupLOE { 
+            padding:10px;
+            background: #FFF4DB; 
+            border: 4px solid #c2e1f5; 
+            z-index: 97;   
+            position: absolute; 
+            left:10%;
+            margin-left: 27px;
+            margin-top: -73px;
+        } 
+        .DescServicePopupLOE:after, .DescServicePopupLOE:before { 
+            top: 100%; border: solid transparent; content: " "; 
+            height: 0; width: 0; position: absolute; pointer-events: none;
+        } 
+        .DescServicePopupLOE:after { border-color: rgba(136, 183, 213, 0); border-top-color: #FFF4DB; 
+            border-width: 30px; left: 50%; margin-left: -30px; } 
+        .DescServicePopupLOE:before { border-color: rgba(194, 225, 245, 0); 
+            border-top-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; 
+        }
+    </style>
+    
+    <apex:sectionHeader title="" subtitle="{!LFA_Work_Plan__c.Name}"/>
+    <apex:outputpanel id="chatterHomePanel">
+        <chatter:feedWithFollowers id="chatterFeed" entityId="{!if(blnHasChild==true,lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Id,LFA_Work_Plan__c.ID)}"/>
+    </apex:outputpanel>
+     
+    <apex:form id="frm">
+        <apex:inputhidden value="{!intTemp}" id="hdnintTemp"/>
+        <apex:actionfunction name="afFillContactsOnChangeRole" action="{!FillContactsOnChangeRole}" reRender="Panel" status="Processing">
+            <apex:param value="" name="ResourceIndex" id="ResourceIndex"/>
+        </apex:actionfunction>
+         <apex:actionfunction name="afFillRateOnChangeContact" action="{!FillRateOnChangeContact}" reRender="Panel" status="Processing">
+            <apex:param value="" name="ResourceIndexForRate" id="ResourceIndexForRate"/>
+        </apex:actionfunction>
+        
+        
+        <apex:actionfunction name="actCollepseAllServiceType" action="{!CollepseAllServiceType}" reRender="frm" status="Processing"/>
+        <apex:actionfunction name="actExapndAllServiceType" action="{!ExapndAllServiceType}" reRender="frm" status="Processing"/>    
+        <!--<apex:actionfunction name="actrerenderaction" action="{!rerenderaction}" status="Processing"/>-->
+        <apex:actionfunction name="actSaveResources" action="{!SaveResources}" status="Processing" reRender="frm"/>
+        <apex:inputHidden value="{!intIndex}" id="hdnIndex"/>
+        <apex:inputHidden value="{!intIndexST}" id="hdnIndexST"/>
+        <apex:inputHidden value="{!blnShowCTPlanned}" id="hdnblnShowCTPlanned"/>
+        <apex:inputHidden value="{!blnShowTGF}" id="hdnblnShowTGF"/>
+        <apex:inputHidden value="{!intOffsetHeight}" id="hdnintOffsetTop"/>
+        <apex:inputHidden value="{!intHeight}" id="hdnsetTop"/>
+        <apex:actionFunction action="{!DeleteService}" name="callDeleteService" reRender="frm" status="Processing" oncomplete="ShowDeleteMessage();">
+            <apex:param name="DeleteIndex" value="" id="DeleteIndex"/>
+            <apex:param name="DeleteSTIndex" value="" id="DeleteSTIndex"/>
+        </apex:actionFunction>
+        <apex:actionFunction action="{!DeleteResource}" name="callDeleteResource"  reRender="Panel" status="Processing" >
+            <apex:param name="DeleteResourceIndex" value="" id="DeleteResourceIndex"/>
+        </apex:actionFunction>
+        <apex:actionFunction action="{!EditService}" name="callEditService" reRender="frm" status="Processing" oncomplete="setPopupheight();">
+            <apex:param name="EditIndex" value="" id="EditIndex"/>
+            <apex:param name="EditSTIndex" value="" id="EditSTIndex"/>
+        </apex:actionFunction>
+        <apex:actionFunction action="{!DuplicateService}" name="callDuplicateService" reRender="frm" status="Processing">
+            <apex:param name="DuplicateIndex" value="" id="DuplicateIndex"/>
+            <apex:param name="DuplicateSTIndex" value="" id="DuplicateSTIndex"/>
+            <apex:param name="ServiceId" value="" id="ServiceId"/>
+        </apex:actionFunction>
+        <apex:actionFunction action="{!SaveServiceAndAddResources}" reRender="frm" name="actSaveServiceAndAddResources" status="Processing" oncomplete="setPopupheightSave();">
+            <apex:param value="" name="SaveServiceIndex" id="SaveServiceIndex"/>
+            <apex:param value="" name="SaveServiceTypeIndex" id="SaveServiceTypeIndex"/>
+        </apex:actionFunction>
+        <apex:pageBlock id="pageB">
+            <apex:pageBlockButtons style="text-align:right !important;" location="top">
+                <a href="/apex/WP_PDF?id={!LFA_Work_Plan__c.Id}" target="_blank" style="padding-right:15px">PDF</a>
+                <a href="/00Ob0000001sO2w?pv0={!LFA_Work_Plan__c.Name}" target="_blank" style="padding-right:15px">Summary Report</a>
+                <a href="/00Ob0000001tdiU?pv0={!LFA_Work_Plan__c.Name}" target="_blank" style="padding-right:15px">LOE by Contact</a>
+                <apex:commandButton value="Save and Return to Work Plan Overview" action="{!BackToWorkPlan}" reRender="frm"/>
+            </apex:pageBlockButtons>
+            <table>
+                <tr>
+                    <td width="140px">
+                        <apex:outputtext value="Filter Services: " style="font-weight:bold"/>
+                    </td>
+                    <td>
+                        <!--<apex:selectList styleClass="picklist" size="1" value="{!SelectedServiceTypeMain}">
+                            <apex:selectOptions value="{!ServiceTypeOptions}"></apex:selectOptions>
+                        </apex:selectList>-->                        
+                        <apex:inputField id="ServiceType" styleClass="picklist" value="{!objServiceForType.Service_Type__c}"/>
+                    </td>
+                    <td class="blankCell"></td>
+                    <td>
+                        <apex:inputField id="ServiceSubType" styleClass="picklist" value="{!objServiceForType.Service_Sub_Type__c}"/>
+                        <!--<apex:selectList styleClass="picklist" size="1" value="{!SelectedServiceSubTypeMain}">
+                            <apex:selectOptions value="{!ServiceSubTypeFilterOptions}"></apex:selectOptions>
+                        </apex:selectList>-->
+                    </td>
+                    <td class="blankCell"></td>
+                    <td>
+                        <apex:selectList styleClass="picklist" size="1" value="{!SelectedGrantMain}">
+                            <apex:selectOptions value="{!GrantOptionsForSearch}"></apex:selectOptions>
+                        </apex:selectList>
+                    </td>
+                    <td class="blankCell"></td>
+                    <td class="blankCell"></td>
+                    <td>
+                        <apex:commandButton id="btnAnalyseMain" value="Filter" action="{!AnalyseMainGridAction}" reRender="frm" status="Processing" />
+                    </td>
+                    
+                    <td>
+                        <apex:commandButton id="btnClearFilter" value="Clear Filter" action="{!ClearFilterMainGrid}" reRender="frm" status="Processing" />
+                    </td>
+                    <td width="200px">
+                    </td>
+                    <td style="text-align:right;width:140px;">
+                        <b>Budgeted ODC:</b> 
+                    </td>  
+                    <td style="text-align:left;width:150px;padding-left: 3px;">
+                        <apex:outputtext value="USD "/>
+                        <apex:inputField value="{!lstWorkPlanToUpdate[0].Budgeted_ODC__C}" onchange="UpdateTotalBudget(this,'{!$Component.lblBudgetedLabor}','{!$Component.lblTotalBudget}')" style="width:65px"/>
+                    </td>                                     
+                 </tr>
+                 <tr>
+                    <td colspan="11">
+                    </td>
+                    <td style="text-align:right;width:500px;font-weight:bold;">
+                            <apex:outputText value="Budgeted Labor: "></apex:outputText>
+                         </td>
+                         <td style="text-align:left;padding-left: 3px;">
+                             <apex:outputText id="lblBudgetedLabor" value="{0, number, USD ###,###,##0}" >                  
+                                <apex:param value="{!intBudgeted_Labor}"/>
+                             </apex:outputText>
+                         </td>                    
+                </tr>
+                <tr>
+                    <td colspan="11">
+                    </td>
+                        <td style="text-align:right;width:500px;font-weight:bold;">
+                            <apex:outputText value="Total Budget: "></apex:outputText>
+                        </td>
+                        <td style="text-align:left;padding-left: 3px;">
+                            <apex:outputText id="lblTotalBudget" value="{0, number, USD ###,###,##0}" >                  
+                                <apex:param value="{!intTotal_Budget}"/>
+                             </apex:outputText>
+                        </td>
+                </tr>
+                 <!--<tr>
+                    <td colspan="9">
+                    </td>
+                    <td style="text-align:right;width:500px;font-weight:bold;">
+                            <apex:outputText value="Budgeted Labor: "></apex:outputText>
+                         </td>
+                         <td style="text-align:left;padding-left: 3px;">
+                             <apex:outputField value="{!lstWorkPlanToUpdate[0].Budgeted_Labor__c}"/>
+                         </td>                    
+                </tr>
+                <tr>
+                    <td colspan="9">
+                    </td>
+                        <td style="text-align:right;width:500px;font-weight:bold;">
+                            <apex:outputText value="Total Budget: "></apex:outputText>
+                        </td>
+                        <td style="text-align:left;padding-left: 3px;">
+                            <apex:outputField value="{!lstWorkPlanToUpdate[0].Total_Budget__c}"/>
+                        </td>
+                </tr>-->
+            </table>
+            <br/>
+            <apex:commandButton id="btnDeleteMultipleServices" value="Delete Multiple Services" action="{!DeleteMultipleServices}" rendered="{!if(LFA_Work_Plan__c.Status__c="CT Planning",true,false)}" reRender="frm" status="Processing"/>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td valign="top">
+            <table width="100%" id="ServiceTable" cellspacing="0" cellpadding="0" border="0" class="list">
+                <thead class="rich-table-thead">
+                    <tr class="headerRow">
+                        <th style="background-color:#F8F8F8;border-bottom:0px;" colspan="3">
+                            <apex:image styleClass="CollapseExpandAllImage" url="{!$Resource.ExpandAll1}" title="Expand All" onclick="actExapndAllServiceType();" rendered="{!blnCollapseAll}"/>
+                            <apex:outputText styleClass="CollapseExpandAllText" value="Expand all" rendered="{!blnCollapseAll}"></apex:outputText>
+                            <apex:image styleClass="CollapseExpandAllImage" url="{!$Resource.CollapseAll1}" title="Collapse All" onclick="actCollepseAllServiceType();" rendered="{!blnExpandAll}"/>
+                            <apex:outputText styleClass="CollapseExpandAllText" value="Collapse all" rendered="{!blnExpandAll}"></apex:outputText>
+                        </th>
+                        <th class="headerRowUpper" colspan="3" style="border-bottom:0px !important;text-align:center;">Risks</th>
+                        <th class="headerRowUpper" colspan="2" style="border-bottom:0px !important;text-align:center;">Current</th>
+                        <!--<th id="CTExpand" class="headerRowUpper" colspan="2" style="display:{!if($Profile.Name != 'LFA','','none')};border-left:0px !important;border-bottom:0px !important;text-align:center;">CT Planned</th>
+                        <th id="TGFExpand" class="headerRowUpper" colspan="2" style="display:{!if($Profile.Name != 'LFA','','none')};border-left:0px !important;border-bottom:0px !important;text-align:center;">TGF Proposed</th>-->
+                        
+                        <th id="CTExpand" class="headerRowUpper" colspan="2" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};border-left:0px !important;border-bottom:0px !important;text-align:center;">
+                            CT Planned
+                            <apex:image styleClass="Image" url="{!$Resource.Expand}" onclick="ColumnExpandCollepse('CTtd','CTth','CTExpand','CTCollepsed','{!$Component.hdnblnShowCTPlanned}','false');" title="Collapse"/>
+                        </th>
+                        <!--<th id="TGFExpand" class="headerRowUpper" colspan="2" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};border-left:0px !important;border-bottom:0px !important;text-align:center;">
+                            TGF Proposed
+                            <apex:image styleClass="Image" url="{!$Resource.Expand}" onclick="ColumnExpandCollepse('TGFtd','TGFth','TGFExpand','TGFCollepsed','{!$Component.hdnblnShowTGF}','false');" title="Collapse"/>
+                        </th>-->
+                        <!--<th id="CTCollepsed" class="headerRowUpperCE" rowspan="2" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF != true,'','none'),'none')};">
+                            CT Planned
+                            <apex:image styleClass="Image" url="{!$Resource.Collepse}" onclick="ColumnExpandCollepse('CTtd','CTth','CTExpand','CTCollepsed','{!$Component.hdnblnShowCTPlanned}','false');" title="Expand"/>
+                        </th>
+                        <th id="TGFCollepsed" class="headerRowUpper" rowspan="2" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned != true,'','none'),'none')};">
+                        TGF Proposed
+                            <apex:image styleClass="ImageResource" url="{!$Resource.Collepse}" onclick="ColumnExpandCollepse('TGFtd','TGFth','TGFExpand','TGFCollepsed','{!$Component.hdnblnShowTGF}','false');" title="Expand"/>
+                        </th>-->
+                        <!--<th id="TGFCollepsed" class="headerRowUpperCE" rowspan="2">TGF Proposed</th>-->
+                    </tr>  
+                    <tr class="headerRow">
+                        <th width="8%" class="headerRowLower"></th>
+                        <th width="22%" class="headerRowLower" style="border-left:0px !important;">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Service{!IF(sortExpressionMainGrid == 'Name',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="Name" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th width="16%" class="headerRowLower" style="border-left:0px !important;border-right:0px !important;">                            
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Grant{!IF(sortExpressionMainGrid == 'Grant__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="Grant__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th width="7%" class="headerRowLower">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Financial & Fiduciary{!IF(sortExpressionMainGrid == 'Grant__r.Financial_and_Fiduciary_Risks__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="Grant__r.Financial_and_Fiduciary_Risks__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th width="7%" class="headerRowLower">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Programmatic & Performance{!IF(sortExpressionMainGrid == 'Grant__r.Programmatic_and_Performance_Risks__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="Grant__r.Programmatic_and_Performance_Risks__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th width="8%" class="headerRowLower">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Health Services & Products{!IF(sortExpressionMainGrid == 'Grant__r.Health_Services_and_Products_Risks__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="Grant__r.Health_Services_and_Products_Risks__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>                        
+                        <th width="8%" class="headerRowLower" > 
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="LOE{!IF(sortExpressionMainGrid == 'LOE__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="LOE__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th width="8%" class="headerRowLower" style="border-left:0px !important;">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Cost{!IF(sortExpressionMainGrid == 'Cost__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="Cost__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th id="CTth" width="8%" class="headerRowLower" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};border-left:0px !important;">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="LOE{!IF(sortExpressionMainGrid == 'CT_Planned_LOE__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="CT_Planned_LOE__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <th id="CTth" width="8%" class="headerRowLower" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};border-left:0px !important;">
+                            <apex:commandLink action="{!sortDataMainGrid}"  value="Cost{!IF(sortExpressionMainGrid == 'CT_Planned_Cost__c',IF(sortExpressionMainGrid =='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                <apex:param value="CT_Planned_Cost__c" name="column" assignTo="{!sortExpressionMainGrid}"></apex:param>
+                            </apex:commandLink>
+                        </th>
+                        <!--<th id="TGFth" width="7%" class="headerRowLower" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};border-left:0px !important;">LOE</th>
+                        <th id="TGFth" width="7%" class="headerRowLower" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};border-left:0px !important;">Cost</th>-->
+                    </tr>  
+                </thead>
+                <apex:variable var="CountST" value="{!0}" />                
+                <apex:repeat id="repeatUpper" value="{!lstwrapServicesType}" var="wrapST">
+                    <tr class="totalRow">
+                        <th class="totalRow">
+                            <apex:inputHidden id="CollapseStatus" value="{!wrapST.blnExpandSection}" />
+                            <apex:outputpanel id="collapseimage" style="display:{!if(wrapST.blnExpandSection == true,'none','')};" rendered="{!if(wrapST.lstwrapServices.size > 0,true,false)}">
+                                <apex:image styleClass="Image" url="{!$Resource.Collepse}" onclick="switchMenu('inlinetablesec{!CountST}','{!$Component.Expandimage}','{!$Component.collapseimage}','{!$Component.CollapseStatus}','true')" title="Expand"/>
+                            </apex:outputpanel>
+                            <apex:outputpanel id="Expandimage" style="display:{!if(wrapST.blnExpandSection == true,'','none')};" rendered="{!if(wrapST.lstwrapServices.size > 0,true,false)}">
+                                  <apex:image styleClass="Image" url="{!$Resource.Expand}" onclick="switchMenu('inlinetablesec{!CountST}','{!$Component.collapseimage}','{!$Component.Expandimage}','{!$Component.CollapseStatus}','false')" title="Collapse"/>
+                            </apex:outputpanel>
+                            <apex:commandLink styleClass="AddLink" action="{!AddService}" id="cmdAdd" value="Add" reRender="frm" status="Processing">
+                                <apex:param name="AddIndex" value="{!CountST}" id="AddIndex"/>
+                            </apex:commandLink>
+                        </th>
+                        <th class="totalRow " colspan="5">
+                            <apex:outputText value="{!wrapST.ServiceType}"/>
+                        </th>
+                        <th class="totalRow ">
+                            <apex:outputText value="{!wrapST.TotalCurrentLOE}" rendered="{!if(wrapST.TotalCurrentLOE != null && wrapST.TotalCurrentLOE != 0,true,false)}"></apex:outputText>
+                        </th>
+                        <th class="totalRow ">
+                            <apex:outputText value="USD {0, number,###,###,##0}" rendered="{!if(wrapST.TotalCurrentCost != null && wrapST.TotalCurrentCost != 0,true,false)}">
+                                <apex:param value="{!wrapST.TotalCurrentCost}"/>
+                            </apex:outputText>
+                        </th>
+                        <th id="CTth" class="totalRow " style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">
+                            <apex:outputText value="{!wrapST.TotalCTPlannedLOE}" rendered="{!if(wrapST.TotalCTPlannedLOE != null && wrapST.TotalCTPlannedLOE != 0,true,false)}"></apex:outputText>
+                        </th>
+                        <th id="CTth" class="totalRow " style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">
+                            <apex:outputText value="USD {0, number,###,###,##0}" rendered="{!if(wrapST.TotalCTPlannedCost != null && wrapST.TotalCTPlannedCost != 0,true,false)}">
+                                <apex:param value="{!wrapST.TotalCTPlannedCost}"/>
+                            </apex:outputText>
+                        </th>
+                        <!--<th id="TGFth" class="totalRow " style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};">
+                            <apex:outputText value="{!wrapST.TotalTGFProposedLOE}" rendered="{!if(wrapST.TotalTGFProposedLOE != null && wrapST.TotalTGFProposedLOE != 0,true,false)}"></apex:outputText>
+                        </th>
+                        <th id="TGFth" class="totalRow " style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};">
+                            <apex:outputText value="USD {0, number,###,###,##0}" rendered="{!if(wrapST.TotalTGFProposedCost != null && wrapST.TotalTGFProposedCost != 0,true,false)}">
+                                <apex:param value="{!wrapST.TotalTGFProposedCost}"/>
+                            </apex:outputText>
+                        </th>-->
+                    </tr>
+                    <tbody id="inlinetablesec{!CountST}" style="display:{!if(wrapST.blnExpandSection == true,'','none')};">
+                        <apex:variable var="Count" value="{!0}" />
+                        <apex:repeat id="repeat" value="{!wrapST.lstwrapServices}" var="Service">   
+                            <tr>
+                                <td class="dataCell" style="white-space: nowrap;border-top:1px solid #838282;border-left:1px solid #E0E3E5;">
+                                    <apex:image style="cursor:pointer;display:{!if($Profile.Name == 'Country Team' && lstWorkPlanToUpdate[0].Country_Team_can_edit__c == false,'none','')};" value="{!$Resource.EditImage}" height="20" width="25" onclick="EditResource(this,'{!Count}','{!CountST}');" rendered="{!if(Service.objService.id != null,true,false)}" title="Edit"/>
+                                    <apex:image style="cursor:pointer;display:{!if($Profile.Name == 'Country Team' && lstWorkPlanToUpdate[0].Country_Team_can_edit__c == false,'none','')};" value="{!$Resource.DeleteImage}" height="20" width="25" onclick="DeleteService('{!Count}','{!CountST}');" title="Delete"/>
+                                    <apex:inputCheckbox id="chkIsDelete" value="{!Service.blnIsMultipleDeleted}" rendered="{!if(LFA_Work_Plan__c.Status__c == 'CT Planning',true,false)}"/>
+                                    <apex:image style="cursor:pointer;display:{!if($Profile.Name == 'Country Team' && lstWorkPlanToUpdate[0].Country_Team_can_edit__c == false,'none','')};" value="{!$Resource.DuplicateImage}" height="20" width="25" onclick="DuplicateService('{!Count}','{!CountST}','{!Service.objService.id}');" rendered="{!if(Service.objService.id != null,true,false)}" title="Duplicate"/>
+                                    <apex:inputHidden id="CollapseStatusResource" value="{!Service.blnExpandResourceSection}" />
+                                    <apex:outputpanel id="collapseimageResource" style="display:{!if(Service.blnExpandResourceSection == true,'none','')};" rendered="{!if(Service.lstwrapResource.size > 0,true,false)}">
+                                        <apex:image styleClass="ImageResource" url="{!$Resource.Collepse}" onclick="switchMenuResource('inlinetablesecResource{!CountST}{!Count}','ResourceHeader{!CountST}{!Count}','{!$Component.ExpandimageResource}','{!$Component.collapseimageResource}','{!$Component.CollapseStatusResource}','true')" title="Expand"/>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel id="ExpandimageResource" style="display:{!if(Service.blnExpandResourceSection == true,'','none')};" rendered="{!if(Service.lstwrapResource != null,true,false)}">
+                                          <apex:image styleClass="ImageResource" url="{!$Resource.Expand}" onclick="switchMenuResource('inlinetablesecResource{!CountST}{!Count}','ResourceHeader{!CountST}{!Count}','{!$Component.collapseimageResource}','{!$Component.ExpandimageResource}','{!$Component.CollapseStatusResource}','false')" title="Collapse"/>
+                                    </apex:outputpanel> &nbsp;&nbsp;
+                                      <apex:image style="cursor:pointer;display:{!if($Profile.Name == 'Country Team' && lstWorkPlanToUpdate[0].Country_Team_can_edit__c == false,'none','')};" value="/resource/1371464181000/GraphicsPack/16/fatcow/farmfresh/information.png" height="20" width="22"  rendered="{!if(Service.objService.id != null,if(Service.blnServCommentFeed,true,false),false)}" title="Chatter Feed : Last Modified - {!Service.ServCommentLM_date}"/>
+                                    <!--<apex:inputHidden value="Status" id="hdnSecStatus"/>
+                                    <apex:inputHidden value="LastmodifiedDate" id="hdnLastmodifiedDate"/>
+                                    <apex:inputHidden value="LastmodifiedBy" id="hdnLastmodifiedBy"/>-->
+                                </td>
+                                <td class="dataCell" style="border-top:1px solid #838282;">
+                                    <apex:outputField value="{!Service.objService.Name}" rendered="{!if(Service.objService.id != null,true,false)}" style="float:left;"/>
+                                    
+                                    <apex:Image style="cursor:pointer;float:right;" height="20" width="20" value="{!$Resource.InformationFlagOrange}" rendered="{!if(Service.objService.id != null && Service.objService.Alert_check_grant__c  == true,true,false)}" onmouseout="toggleDescService('{!$Component.DescPopup}')" onmouseover="toggleDescService('{!$Component.DescPopup}')"/>
+                                    <apex:Image style="cursor:pointer;float:right;" height="20" width="20" value="{!$Resource.InformationFlagRed}" rendered="{!if(Service.objService.id != null && Service.objService.num_resources__c=0,true,false)}" onmouseout="toggleDescService('{!$Component.DescPopupHasResource}')" onmouseover="toggleDescService('{!$Component.DescPopupHasResource}')"/>
+                                    <apex:Image style="cursor:pointer;float:right;" height="20" width="20" value="{!$Resource.InformationFlagBlue}" rendered="{!if(Service.objService.id != null && Service.objService.Has_TBD_Contact__c != null && Service.objService.Has_TBD_Contact__c>0,true,false)}" onmouseout="toggleDescService('{!$Component.DescPopupLOE}')" onmouseover="toggleDescService('{!$Component.DescPopupLOE}')"/>
+                                    <apex:outputpanel styleClass="DescServicePopupClone" id="DescPopup" style="display:none;">
+                                        <apex:outputText value="Please view and confirm the resource details for this cloned service." rendered="{!if(Service.objService.Alert_check_grant__c  == true,true,false)}"/>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel styleClass="DescServicePopupHasResource" id="DescPopupHasResource" style="display:none;">
+                                        <apex:outputText value="You must assign at least one resource to this service." rendered="{!if(Service.objService.num_resources__c=0,true,false)}"/>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel styleClass="DescServicePopupLOE" id="DescPopupLOE" style="display:none;">
+                                        <apex:outputText value="There is a TBD resource on this service with LOE assigned." rendered="{!if(Service.objService.id != null && Service.objService.Has_TBD_Contact__c != null && Service.objService.Has_TBD_Contact__c>0,true,false)}"/>
+                                    </apex:outputpanel>
+                                                                                                               
+                                                                                                               
+                                    <!--<apex:Image url="{!URLFOR($Resource.GraphicsPack, '16/fatcow/farmfresh/flag_2.png')}" rendered="{!if(Service.objService.id != null && Service.objService.Alert_check_grant__c == true,true,false)}" style="float:right;"/>-->
+                                    <apex:inputField value="{!Service.objService.Service_Type__c}" style="display:none;"/>
+                                    <apex:inputField id="ServiceSubtype" value="{!Service.objService.Service_Sub_Type__c}" rendered="{!if(Service.objService.id == null,true,false)}"/>
+                                    <!--<table cellspacing="0" cellpadding="0" border="0" class="noBorder">
+                                        <tr>
+                                            <td>
+                                                <apex:selectList value="{!Service.objService.Service_Sub_Type__c}" style="width:200px;" size="1" rendered="{!if(Service.objService.id == null,true,false)}" >
+                                                    <apex:selectOptions value="{!ServiceSubTypeOptions}"></apex:selectOptions>
+                                                </apex:selectList>
+                                            </td>
+                                        </tr>
+                                    </table>-->
+                                </td>
+                                <td class="dataCell" style="border-top:1px solid #838282;">
+                                    <apex:outputLink target="_Blank" value="/{!Service.objService.Grant__c}" rendered="{!if(Service.objService.id != null && Service.objService.Grant__c != null,true,false)}">
+                                        <apex:outputField value="{!Service.objService.Grant__c}"/>                                
+                                    </apex:outputLink>
+                                    <apex:outputtext value="Multiple Grants" rendered="{!if(Service.objService.id != null && Service.objService.Grant__c == null,true,false)}"/>
+                                    <apex:selectList value="{!Service.objService.Grant__c}" style="width:100px;"  rendered="{!if(Service.objService.id == null,true,false)}" size="1">
+                                        <apex:selectOptions value="{!GrantOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                
+                                <td colspan="{!if(Service.objService.id == null,'3','1')}" class="dataCell" style="border-right:{!if(Service.objService.id == null,'0px !important','')};border-top:1px solid #838282;background-color:{!if(Service.objService.Grant__r.Financial_and_Fiduciary_Risks__c == 'High','red',if(Service.objService.Grant__r.Financial_and_Fiduciary_Risks__c == 'Medium','yellow',if(Service.objService.Grant__r.Financial_and_Fiduciary_Risks__c == 'Low','lightgreen','')))}">
+                                    <apex:outputField value="{!Service.objService.Grant__r.Financial_and_Fiduciary_Risks__c}" rendered="{!if(Service.objService.id != null,true,false)}"/>
+                                    <apex:commandLink id="cmdLinksave" value="Save service and add Resources" rendered="{!if(Service.objService.id == null,true,false)}" onclick="return validate('{!$Component.ServiceSubtype}','{!Count}','{!CountST}',this,event);"/>
+                                </td>  
+                                <td class="dataCell" style="border-top:1px solid #838282;display:{!if(Service.objService.id == null,'none','')};background-color:{!if(Service.objService.Grant__r.Programmatic_and_Performance_Risks__c == 'High','red',if(Service.objService.Grant__r.Programmatic_and_Performance_Risks__c == 'Medium','yellow',if(Service.objService.Grant__r.Programmatic_and_Performance_Risks__c == 'Low','lightgreen','')))}">
+                                    <apex:outputField value="{!Service.objService.Grant__r.Programmatic_and_Performance_Risks__c}" rendered="{!if(Service.objService.id != null,true,false)}"/>
+                                </td>  
+                                <td class="dataCell" style="border-top:1px solid #838282;display:{!if(Service.objService.id == null,'none','')};background-color:{!if(Service.objService.Grant__r.Health_Services_and_Products_Risks__c == 'High','red',if(Service.objService.Grant__r.Health_Services_and_Products_Risks__c == 'Medium','yellow',if(Service.objService.Grant__r.Health_Services_and_Products_Risks__c == 'Low','lightgreen','')))}">
+                                    <apex:outputField value="{!Service.objService.Grant__r.Health_Services_and_Products_Risks__c}" rendered="{!if(Service.objService.id != null,true,false)}"/>
+                                </td>
+
+                                <td class="dataCell" style="border-top:1px solid #838282;border:{!if(Service.objService.id == null,'0px !important','')};">
+                                    <apex:outputField value="{!Service.objService.LOE__c}" rendered="{!if(Service.objService.id != null && Service.objService.LOE__c != 0,true,false)}"/>
+                                </td>
+                                <td class="dataCell" style="border-top:1px solid #838282;border:{!if(Service.objService.id == null,'0px !important','')};" >
+                                    <apex:outputField value="{!Service.objService.Cost__c}" rendered="{!if(Service.objService.id != null && Service.objService.Cost__c != 0,true,false)}"/>
+                                </td>
+                                <td id="CTtd" class="dataCell" style="border:{!if(Service.objService.id == null,'0px !important','')};border-top:1px solid #838282;display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')}">
+                                    <apex:outputField value="{!Service.objService.CT_Planned_LOE_rollup__c}" rendered="{!if(Service.objService.id != null && Service.objService.CT_Planned_LOE_rollup__c != 0,true,false)}"/>
+                                </td>
+                                <td id="CTtd" class="dataCell" style="border:{!if(Service.objService.id == null,'0px !important','')};border-top:1px solid #838282;display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')}">
+                                    <apex:outputField value="{!Service.objService.CT_Planned_Cost_rollup__c}" rendered="{!if(Service.objService.id != null && Service.objService.CT_Planned_Cost_rollup__c != 0,true,false)}"/>
+                                </td>
+                                <!--<td id="TGFtd" class="dataCell" style="border:{!if(Service.objService.id == null,'0px !important','')};border-top:1px solid #838282;display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')}">
+                                    <apex:outputField value="{!Service.objService.TGF_Proposed_LOE_2__c}" rendered="{!if(Service.objService.id != null && Service.objService.TGF_Proposed_LOE_2__c != 0,true,false)}"/>
+                                </td>
+                                <td id="TGFtd" class="dataCell" style="border-top:1px solid #838282;border-left:{!if(Service.objService.id == null,'0px !important','')};border-right:1px solid #E0E3E5;display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')}"> 
+                                    <apex:outputField value="{!Service.objService.TGF_Proposed_Cost_2__c}" rendered="{!if(Service.objService.id != null && Service.objService.TGF_Proposed_Cost_2__c != 0,true,false)}"/>
+                                </td>-->
+                            </tr>
+                            <tr id="ResourceHeader{!CountST}{!Count}" style="display:{!if(Service.blnExpandResourceSection == true,'','none')};">
+                                <th style="border:none"></th>
+                                <th class="headerRowResource" colspan="2">Role</th>
+                                <th class="headerRowResource" colspan="2">Person</th>
+                                <th class="headerRowResource">Current Rate</th>
+                                <th class="headerRowResource">LOE</th>
+                                <th class="headerRowResource">Cost</th>
+                                <th id="CTth" class="headerRowResource" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">LOE</th>
+                                <th id="CTth" class="headerRowResource" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">Cost</th>
+                            </tr>
+                            <apex:repeat value="{!Service.lstwrapResource}" var="ServiceResource">
+                                <tr id="inlinetablesecResource{!CountST}{!Count}" style="display:{!if(Service.blnExpandResourceSection == true,'','none')};">
+                                    <td class="dataCell" style="border:none;">
+                                    </td>
+                                    <td class="dataCell" colspan="2" style="border-bottom:1px solid #E0E3E5;">
+                                        <apex:outputText value="{!ServiceResource.RoleName}" />
+                                    </td>
+                                    <td class="dataCell" colspan="2" style="border-bottom:1px solid #E0E3E5;">
+                                        <apex:outputText value="{!ServiceResource.ContactName}" />
+                                    </td>
+                                    <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                        <apex:outputField value="{!ServiceResource.objResource.Rate__c}" />
+                                    </td>
+                                    <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                        <apex:outputField value="{!ServiceResource.objResource.LOE__c}"/>
+                                    </td>                                    
+                                    <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                        <apex:outputField value="{!ServiceResource.objResource.Cost__c}"/>
+                                    </td>
+                                    <td  id="CTtd" class="dataCell" style="border-bottom:1px solid #E0E3E5;display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">
+                                        <apex:outputField value="{!ServiceResource.objResource.CT_Planned_LOE__c}"/>
+                                    </td>                                    
+                                    <td id="CTtd" class="dataCell" style="border-bottom:1px solid #E0E3E5;display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">
+                                        <apex:outputField value="{!ServiceResource.objResource.CT_Planned_Cost__c}"/>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <tr id="ResourceHeader{!CountST}{!Count}" style="display:{!if(Service.blnExpandResourceSection == true,'','none')};">
+                                <td style="border:none"></td>
+                                <td class="headerRowResource" style="border:none;background-color:peachpuff !important;" colspan="5">
+                                    <b>Comments:</b>&nbsp;{!Service.objService.Comments__c}
+                                </td>
+                                <td id="CTth" class="headerRowResource" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};"></td>
+                                <td id="CTth" class="headerRowResource" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};"></td>
+                            </tr>
+                            <!--<tr><td id="drawline" colspan="12" style="border-bottom:1px solid #838282;padding:0px;"></td></tr>-->
+                            <apex:variable var="Count" value="{!Count+1}" />
+                        </apex:repeat>
+                    </tbody>
+                    <apex:variable var="CountST" value="{!CountST+1}" />                    
+                </apex:repeat>
+                <tfoot>
+                    <tr class="totalRow">
+                        <th class="totalRow"></th>
+                        <th class="totalRow" >
+                            <!--<apex:commandLink action="{!AddService}" id="cmdAdd" value="Add" reRender="frm" status="Processing"/>-->
+                        </th>
+                        
+                        <th class="totalRow"></th>
+                        <th class="totalRow"></th>
+                        <th class="totalRow"></th>
+                        <th class="totalRow">
+                            <apex:outputText value="Total"></apex:outputText>
+                        </th>
+                        <th class="totalRow">
+                            <apex:outputText value="{!CurrentLOE}" rendered="{!if(CurrentLOE != 0,true,false)}"></apex:outputText>
+                        </th>
+                        <th class="totalRow">
+                            <apex:outputText value="USD {0, number,###,###,##0}" rendered="{!if(CurrentCost != 0,true,false)}">
+                                <apex:param value="{!CurrentCost}"/>
+                            </apex:outputText>
+                        </th>
+                        <th id="CTth" class="totalRow" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">
+                            <apex:outputText value="{!CTPlannedLOE}" rendered="{!if(CTPlannedLOE != 0,true,false)}"></apex:outputText>
+                        </th>
+                        <th id="CTth" class="totalRow" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned == true,'','none'),'none')};">
+                            <apex:outputText value="USD {0, number,###,###,##0}" rendered="{!if(CTPlannedCost != 0,true,false)}">
+                                <apex:param value="{!CTPlannedCost}"/>
+                            </apex:outputText>
+                        </th>
+                        <!--<th id="TGFth" class="totalRow" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};">
+                            <apex:outputText value="{!TGFProposedLOE}" rendered="{!if(TGFProposedLOE != 0,true,false)}"></apex:outputText>
+                        </th>
+                        <th id="TGFth" class="totalRow" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF == true,'','none'),'none')};">
+                            <apex:outputText value="USD {0, number,###,###,##0}" rendered="{!if(TGFProposedCost != 0,true,false)}">
+                                <apex:param value="{!TGFProposedCost}"/>
+                            </apex:outputText>
+                        </th>-->
+                        
+                    </tr>
+                </tfoot>
+            </table>
+            </td>
+            <td valign="top">
+                <div id="CTCollepsed" class="box_rotate box_CT" style="display:{!if($Profile.Name != 'LFA',if(blnShowCTPlanned != true,'','none'),'none')};">
+                   <apex:image styleClass="Image" url="{!$Resource.Collepse}" onclick="ColumnExpandCollepse('CTtd','CTth','CTExpand','CTCollepsed','{!$Component.hdnblnShowCTPlanned}','true');" title="Expand"/>
+                   CT Planned
+               </div>
+            </td>
+            <td valign="top">
+                <div id="TGFCollepsed" class="box_rotate box_TGF" style="display:{!if($Profile.Name != 'LFA',if(blnShowTGF != true,'','none'),'none')};">
+                    <apex:image styleClass="Image" url="{!$Resource.Collepse}" onclick="ColumnExpandCollepse('TGFtd','TGFth','TGFExpand','TGFCollepsed','{!$Component.hdnblnShowTGF}','true');" title="Expand"/>
+                    TGF Proposed
+                </div>
+            </td>
+            </tr>
+            </table>
+            
+        </apex:pageBlock>
+        <apex:outputPanel id="tstpopup" >
+            <apex:outputPanel id="popupBackground" styleClass="popupBackground" rendered="{!blnHasChild}"/>
+            <apex:outputPanel id="custPopup" styleClass="custPopup"  rendered="{!blnHasChild}">
+                <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                        <td width="50%" class="resourcetTable">
+                            <apex:pageBlock id="pBlock" title="Add/Edit Resources" helpTitle="Benchmarking" helpurl="/apex/ServiceBenchmarking?id={!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Id}">
+                                <apex:pageBlockButtons location="bottom">
+                                    <apex:commandButton value="Save" onclick="return ValidateLOE('{!$Component.selPeriodStart}','{!$Component.selPeriodStartYear}','{!$Component.selPeriodEnd}','{!$Component.selPeriodEndYear}','{!$Component.txtForecastedStartDate}','{!$Component.txtForecastedEndDate}');"/>
+                                    <apex:commandButton value="Cancel" onclick="blankInputFieldText();" action="{!CancelResources}" status="Processing"  reRender="frm"/>                                    
+                                </apex:pageBlockButtons>
+                                <div>
+                                <apex:pageBlockSection >
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputLabel value="Service Type:"></apex:outputLabel>
+                                        <apex:outputPanel >
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <apex:inputField value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Service_Type__c}" style="display:none;"/>
+                                                        <apex:inputField value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Service_Sub_Type__c}" onchange="displayOtherSubCatagory(this,'{!$Component.txtOtherSubCatagory}');"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <apex:inputText id="txtOtherSubCatagory" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Other_Sub_Category__c}" style="display:{!if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Service_Sub_Type__c == 'Other LFA Services' || lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Service_Sub_Type__c == 'Other procurement related services','','none')}"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </apex:outputPanel>
+                                        <!--<apex:selectList value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Service_Sub_Type__c}" style="width:200px;" size="1">
+                                            <apex:selectOptions value="{!ServiceSubTypeOptions}"></apex:selectOptions>
+                                        </apex:selectList>-->
+                                        <!--<apex:outputText value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Name}"/>-->
+                                    </apex:pageBlockSectionItem>
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputLabel value="Grant:"></apex:outputLabel>
+                                        <apex:selectList size="1" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__c}">
+                                            <apex:selectOptions value="{!GrantOptions}"></apex:selectOptions>
+                                        </apex:selectList>
+                                        <!--<apex:outputText value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Name}"/>-->
+                                    </apex:pageBlockSectionItem>
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputLabel value="Country:"></apex:outputLabel>
+                                        <apex:outputText value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.LFA_Work_Plan__r.Country__r.Name}"/>
+                                    </apex:pageBlockSectionItem>
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputLabel value="Grant Status:"></apex:outputLabel>
+                                        <apex:outputText value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Grant_Status__c}"/>
+                                    </apex:pageBlockSectionItem>                                                                                                
+                                </apex:pageBlockSection>
+                                <p></p>
+                                <table align="center" style="padding-bottom:10px">                               
+                                    <tr style="display:{!if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__c != NULL,true,false)}">
+                                        <td align="right">
+                                            <apex:outputLabel value="Programmatic Period Covered: " style="font-weight:bold;font-color:grey;"></apex:outputLabel>
+                                        </td>
+                                        <td>
+                                            <apex:inputfield id="selPeriodStart" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Period_Start__c}"/>
+                                        </td>
+                                        <td>
+                                            <apex:inputfield id="selPeriodStartYear" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Period_Start_Year__c}" />
+                                        </td>
+                                        <td>                                      
+                                            <apex:outputLabel value=" to "></apex:outputLabel>
+                                        </td>
+                                        <td>
+                                            <apex:inputfield id="selPeriodEnd" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Period_End__c}"/>
+                                        </td>
+                                        <td>
+                                            <apex:inputfield id="selPeriodEndYear" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Period_End_Year__c}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>                  
+                                            <apex:outputLabel value="Forecasted Service Delivery Period: " style="font-weight:bold"></apex:outputLabel>
+                                        </td>
+                                        <td colspan="2" align="center">
+                                            <apex:inputfield id="txtForecastedStartDate" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Forecasted_Start_Date__c}"/>
+                                        </td>
+                                        <td>
+                                            <apex:outputLabel value=" to "></apex:outputLabel>
+                                        </td>
+                                        <td colspan="2" align="center">
+                                            <apex:inputfield id="txtForecastedEndDate" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Forecasted_End_Date__c}"/>  
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right" valign="top">                  
+                                            <apex:outputLabel value="Comments: " style="font-weight:bold"></apex:outputLabel>
+                                        </td>
+                                        <td colspan="5">
+                                            <apex:inputfield id="txtComments" styleclass="countable1" onKeyPress="return charLimit(this)" onKeyUp="return characterCount(this)" style="resize:none; height: 75px;width: 325px;" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Comments__c}"/>
+                                            <div id="charCount" class="jqEasyCounterMsg" style="font-size: 12px; font-family: Arial; color: rgb(0, 0, 0); text-align: right; width: 325px; opacity: 0.800210112662942;">0/330</div>
+                                            <!-- <apex:outputLabel value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].strOldComments}"></apex:outputLabel> -->
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p></p>                             
+                                <apex:outputPanel rendered="{!if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__c != NULL,true,false)}">
+                                    <table cellpadding="5px" cellspacing="0" align="center">
+                                        <tr >
+                                           <td><b>Risks</b></td>
+                                           <td style="border: 1px solid grey;background-color:{!if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Financial_and_Fiduciary_Risks__c == 'High','red',if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Financial_and_Fiduciary_Risks__c == 'Medium','yellow',if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Financial_and_Fiduciary_Risks__c == 'Low','lightgreen','')))}"><apex:outputtext value="Financial & Fiduciary"/></td>
+                                           <td style="border: 1px solid grey;background-color:{!if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Programmatic_and_Performance_Risks__c == 'High','red',if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Programmatic_and_Performance_Risks__c == 'Medium','yellow',if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Programmatic_and_Performance_Risks__c == 'Low','lightgreen','')))}"><apex:outputtext value="Programmatic & Performance"/></td>
+                                           <td style="border: 1px solid grey;background-color:{!if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Health_Services_and_Products_Risks__c == 'High','red',if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Health_Services_and_Products_Risks__c == 'Medium','yellow',if(lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Grant__r.Health_Services_and_Products_Risks__c == 'Low','lightgreen','')))}"><apex:outputtext value="Health Services & Products"/></td>
+                                        </tr>
+                                    </table>    
+                                </apex:outputPanel>
+                                </div>
+                                <br/>
+                                <apex:outputPanel id="Panel">
+                                    <apex:variable id="variable" var="CountResource" value="{!0}"/>
+                                    <apex:pageBlockTable width="100%" id="pbtable" headerClass="headerColor" value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].lstwrapResource}" var="Resource">
+                                        <apex:column width="8%" >
+                                            <apex:image style="cursor:pointer;float:left;" value="{!$Resource.DeleteImage}" height="20" width="25" title="Delete" onclick="DeleteResource('{!CountResource}');" />
+                                            <apex:image id="InfoImageBlue" style="cursor:pointer;float:right;display:{!if(Resource.blnTBDContactLOEZeroInfo == true,'','none')}" value="{!$Resource.InformationFlagBlue}" height="20" width="20" onmouseout="toggleDescPopup('{!$Component.DescPopup}')" onmouseover="toggleDescPopup('{!$Component.DescPopup}')"/> <!-- title="This TBD resource has LOE assigned."/>-->
+                                            <apex:outputpanel styleClass="DescPopup" id="DescPopup" style="display:none;">
+                                               Please update: a TBD contact must have an LOE of 0.                                                                               
+                                            </apex:outputpanel> 
+                                            <apex:facet name="footer">
+                                                <apex:commandLink value="Add" reRender="Panel" status="Processing" action="{!AddResource}">
+                                                    <apex:param value="{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.id}" name="newServiceId" id="newServoceId"/>
+                                                </apex:commandLink>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column width="10%" headerValue="Role">
+                                            <!--<apex:outputText value="{!Resource.RoleName}" rendered="{!if(Resource.objResource.Id != null,true,false)}"/>-->
+                                            <apex:SelectList id="Rolelist" style="width:140px;" value="{!Resource.objResource.LFA_Role__c}" onchange="FillContact('{!CountResource}');" size="1" >
+                                                <apex:selectOptions value="{!RoleOptions}"></apex:selectOptions>                                            
+                                            </apex:SelectList>
+                                            <!--<apex:SelectList style="width:200px;" onchange="FillContact('{!CountResource}');" value="{!Resource.objResource.LFA_Role__c}" rendered="{!if(Resource.objResource.Id == null,true,false)}" size="1" >
+                                                <apex:selectOptions value="{!RoleOptions}"></apex:selectOptions>                                            
+                                            </apex:SelectList>-->
+                                        </apex:column>
+                                        <apex:column width="15%" headerValue="Person">
+                                            <!--<apex:outputText value="{!Resource.ContactName}" rendered="{!if(Resource.objResource.Id != null,true,false)}"/>-->
+                                            <apex:SelectList id="ContactList" style="width:140px;" value="{!Resource.ContactID}" onchange="FillRate('{!CountResource}');" size="1">
+                                                <apex:selectOptions value="{!Resource.ContactOptions}"></apex:selectOptions>
+                                            </apex:SelectList>
+                                            <!--<apex:SelectList style="width:200px;" id="ConList" onchange="FillRate('{!CountResource}');" value="{!Resource.ContactID}" rendered="{!if(Resource.objResource.Id == null,if(Resource.objResource.LFA_Role__c!=null,true,false),false)}" size="1">
+                                                <apex:selectOptions value="{!Resource.ContactOptions}"></apex:selectOptions>
+                                            </apex:SelectList>-->
+                                        </apex:column>
+                                        <apex:column width="15%" headerValue="Rate">
+                                        <apex:outputField id="optRate" value="{!Resource.objResource.Rate__c}" rendered="{!if(Resource.ContactName == 'TBD' && Resource.RoleName == 'Other Professional',false,true)}"/>
+                                        <apex:inputField id="inpRate" style="width:50px;" value="{!Resource.objResource.Rate__c}" rendered="{!if(Resource.ContactName == 'TBD' && Resource.RoleName == 'Other Professional',true,false)}" onchange="Calculation();"/>
+                                           <!-- <apex:outputField id="optRate" value="{!Resource.objResource.Rate__c}" rendered="{!if(Resource.ContactName != 'TBD',true,false)}"/>
+                                            
+                                            <apex:inputField id="inpRate" style="width:80px;" value="{!Resource.objResource.Rate__c}" rendered="{!if(Resource.ContactName == 'TBD',true,false)}" onchange="Calculation();"/>-->
+                                            <apex:facet name="footer">
+                                                <apex:outputText value="Total"/>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column width="9%" headerValue="LOE">
+                                            <apex:inputField style="width:50px;" id="txtLOE" value="{!Resource.objResource.LOE__c}" onchange="validateLOEForTBD(this,'{!$Component.InfoImageBlue}','{!$Component.ContactList}');"/>
+                                            <apex:facet name="footer">
+                                                <apex:outputLabel id="txtTotalLOE" value=""/>
+                                            </apex:facet>
+                                        </apex:column>                                        
+                                        <apex:column width="15%" headerValue="Cost">
+                                            <apex:outputText id="inpCost" value="{!Resource.objResource.Cost__c}"/>
+                                            <apex:facet name="footer">                                               
+                                                <apex:outputLabel id="txtTotalCost" value="" />
+                                                <!--<apex:outputText id="txtTotalCost" value="$ {0, number,###,###,##0}"> 
+                                                    <apex:param value="" />                           
+                                               </apex:outputText>-->
+                                            </apex:facet>
+                                            <apex:variable var="CountResource" value="{!CountResource+1}"/>
+                                        </apex:column>
+                                    </apex:pageBlockTable>
+                                    <script>
+                                        function displayOtherSubCatagory(SubType,OtherSubCatagory){
+                                            if(SubType.value == 'Other LFA Services' || SubType.value == 'Other procurement related services'){
+                                                document.getElementById(OtherSubCatagory).style.display = '';
+                                            }else{
+                                                document.getElementById(OtherSubCatagory).style.display = 'none';
+                                            }
+                                        }
+                                        function ConvertNum(textvalue)
+                                        {        
+                                            textvalue= textvalue.replace("$", "");
+                                            textvalue= textvalue.replace(/,/g, "");
+                                            textvalue= textvalue.replace("'", "");
+                                            var num1 = 0;
+                                            if(textvalue.indexOf("USD") != -1){
+                                                var indexusd = textvalue.indexOf("USD");
+                                                var textvalue1 = textvalue.substring(indexusd+4,textvalue.length);
+                                                for(i=0;textvalue1.length;i++)
+                                                {    
+                                                    if(isNaN(textvalue1[i]))
+                                                    {    
+                                                        break;
+                                                    }
+                                                    else
+                                                    {   
+                                                        num1+=textvalue1[i];
+                                                    }
+                                                }
+                                            }else{
+                                                num1=textvalue;
+                                            }
+                                            var num= parseFloat(num1);
+                                            num=num.toFixed(2);
+                                            if(isNaN(num)){
+                                                return 0;
+                                            }else{
+                                                return num;
+                                            }                
+                                        }
+                                        
+                                        function validateLOEForTBD(LOEid,ImageId,contactId){
+                                            if(document.getElementById(ImageId) != null && document.getElementById(contactId) != null && document.getElementById(contactId).value == 'TBD'){
+                                                if(LOEid.value == 0){
+                                                    document.getElementById(ImageId).style.display = 'none';
+                                                }else{
+                                                    document.getElementById(ImageId).style.display = 'block';
+                                                }
+                                            }
+                                            Calculation();
+                                        }
+                                        
+                                        function Calculation(){
+                                            
+                                            var size='{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].lstwrapResource.size}';
+                                            var TotalLOE = 0;
+                                            var TotalCost =0;
+                                            for(var i=0;i<size;i++)
+                                            {
+                                                var LOE = 0;
+                                                LOE = ConvertNum(document.getElementById("page:frm:pBlock:pbtable:"+i+":txtLOE").value);
+                                                TotalLOE += parseFloat(LOE);  
+                                                var Rate =0;
+                                                if(document.getElementById("page:frm:pBlock:pbtable:"+i+":inpRate") != null)
+                                                {
+                                                     Rate = ConvertNum(document.getElementById("page:frm:pBlock:pbtable:"+i+":inpRate").value);
+                                                } 
+                                                else if(document.getElementById("page:frm:pBlock:pbtable:"+i+":optRate") != null)
+                                                {    
+                                                     Rate = ConvertNum(document.getElementById("page:frm:pBlock:pbtable:"+i+":optRate").innerHTML);
+                                                }
+                                                var Cost = LOE * Rate;  
+                                                TotalCost +=Cost;
+                                                var decCost = Cost.toFixed(0);
+                                                document.getElementById("page:frm:pBlock:pbtable:"+i+":inpCost").innerHTML = addCommas(decCost); ;              
+                                            }
+                                            
+                                            TotalLOE = TotalLOE.toString();
+                                            if(TotalLOE.indexOf(".") == -1) TotalLOE = TotalLOE+".00";
+                                            if(TotalLOE == 0) TotalLOE = '';
+                                            var decTotalLOE  = parseFloat(TotalLOE).toFixed(2);
+                                            var decTotalCost = parseFloat(TotalCost).toFixed(0);
+                                            document.getElementById("page:frm:pBlock:pbtable:txtTotalLOE").innerHTML = addCommasLOE(decTotalLOE);
+                                            document.getElementById("page:frm:pBlock:pbtable:txtTotalCost").innerHTML = addCommas(decTotalCost );            
+                                        }
+                                        function addCommas(nStr)
+                                        {
+                                            nStr += '';
+                                            x = nStr.split('.');
+                                            x1 = x[0];
+                                            x2 = x.length > 1 ? '.' + x[1] : '';
+                                            var rgx = /(\d+)(\d{3})/;
+                                            while (rgx.test(x1)) {
+                                                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                                            }
+                                            return 'USD ' + x1 + x2;
+                                        }
+                                        function addCommasLOE(nStr)
+                                        {
+                                            nStr += '';
+                                            x = nStr.split('.');
+                                            x1 = x[0];
+                                            x2 = x.length > 1 ? '.' + x[1] : '';
+                                            var rgx = /(\d+)(\d{3})/;
+                                            while (rgx.test(x1)) {
+                                                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                                            }
+                                            return + x1 + x2;
+                                        }
+                                        /*function number_format(input_){
+                                            if(input_>0){
+                                                var input_string=input_.toString();
+                                                var rebuild='';
+                                                var rebuild_remaining=input_string;
+                                                var loop_='no';
+                                                for(i=0; rebuild_remaining.length>3; i++){
+                                                    loop_='yes';
+                                                    rebuild = rebuild_remaining.substr((rebuild_remaining.length-3),3)+','+rebuild;
+                                                    rebuild_remaining=rebuild_remaining.substr(0,(rebuild_remaining.length-3));
+                                                }
+                                                if(loop_==='yes'){
+                                                    rebuild = rebuild_remaining+','+rebuild;
+                                                    rebuild = rebuild.substr(0,(rebuild.length-1));
+                                                }else{
+                                                    rebuild=input_string;
+                                                }
+                                                rebuild= rebuild.replace(",.",".");
+                                                return 'USD '+rebuild;
+                                            }else{
+                                                return '';
+                                            }            
+                                        }*/
+                                        Calculation();
+                                        function ValidateDates(selPeriodStartID,selPeriodStartYearID,selPeriodEndID,selPeriodEndYearID,txtForecastedStartDateID,txtForecastedEndDateID){
+                                            var selectedPeriodStart = document.getElementById(selPeriodStartID);
+                                            var PeriodStartVal=0;
+                                            if(selectedPeriodStart.selectedIndex!=0){
+                                                var monthString = selectedPeriodStart.options[selectedPeriodStart.selectedIndex].value;
+                                                var dat = new Date('1 ' + monthString + ' 1999');
+                                                PeriodStartVal = dat.getMonth()+1;
+                                            }
+                                            var selectedPeriodStartYear = document.getElementById(selPeriodStartYearID);
+                                            var PeriodStartYearVal=0;
+                                            if(selectedPeriodStartYear.selectedIndex!=0){
+                                                var PeriodStartYearVal= selectedPeriodStartYear.options[selectedPeriodStartYear.selectedIndex].value;
+                                            }
+                                            var selectedPeriodEnd= document.getElementById(selPeriodEndID);
+                                            var PeriodEndVal=0;
+                                            if(selectedPeriodEnd.selectedIndex!=0){
+                                                var monthString = selectedPeriodEnd.options[selectedPeriodEnd.selectedIndex].value;
+                                                var dat = new Date('1 ' + monthString + ' 1999');
+                                                PeriodEndVal= dat.getMonth()+1;
+                                            }
+                                            var selectedPeriodEndYear = document.getElementById(selPeriodEndYearID);
+                                            var PeriodEndYearVal = 0;
+                                            if(selectedPeriodEndYear.selectedIndex!=0){
+                                                PeriodEndYearVal = selectedPeriodEndYear.options[selectedPeriodEndYear.selectedIndex].value;
+                                            }
+                                            if(PeriodEndYearVal==0 || PeriodStartYearVal==0 || PeriodEndVal==0 || PeriodStartVal==0){
+                                                if(PeriodEndVal!=0 && PeriodEndYearVal==0){
+                                                    alert("Please Select Programmatic Period Covered End Year.");
+                                                    return false;
+                                                }else if(PeriodStartVal!=0 && PeriodStartYearVal==0){
+                                                    alert("Please Select Programmatic Period Covered Start Year.");
+                                                    return false;
+                                                }else if(PeriodStartVal==0 && PeriodStartYearVal!=0){
+                                                    alert("Please Select Programmatic Period Covered Start Month.");
+                                                    return false;
+                                                }else if(PeriodEndVal==0 && PeriodEndYearVal!=0){
+                                                    alert("Please Select Programmatic Period Covered End Month.");
+                                                    return false;
+                                                }else if(PeriodStartVal!=0 && PeriodStartYearVal!=0 && (PeriodEndVal==0 || PeriodEndYearVal==0)){
+                                                    alert("Please Select Programmatic Period Covered End Month and Year.");
+                                                    return false;
+                                                }else if(PeriodEndVal!=0 && PeriodEndYearVal!=0 && (PeriodStartVal==0 || PeriodStartYearVal==0)){
+                                                    alert("Please Select Programmatic Period Covered Start Month and Year.");
+                                                    return false;
+                                                }
+                                                
+                                            }else{
+                                                if(PeriodEndYearVal < PeriodStartYearVal){
+                                                    alert("Programmatic Period Covered End Year must be greater than Start Year.");
+                                                    return false;
+                                                }else if(PeriodEndYearVal == PeriodStartYearVal){                                                
+                                                    if(PeriodEndVal < PeriodStartVal){
+                                                        alert("Programmatic Period Covered End Month must be greater than Start Month.");
+                                                        return false;
+                                                    }
+                                                }   
+                                            }                                       
+                                            
+                                            var txtForecastedStartDate = document.getElementById(txtForecastedStartDateID);
+                                            var ForecastedStartDate="";
+                                            if(txtForecastedStartDate.value!=""){
+                                                ForecastedStartDate=formatDate(txtForecastedStartDate.value);
+                                            }
+                                            var txtForecastedEndDate= document.getElementById(txtForecastedEndDateID);
+                                            var ForecastedEndDate="";
+                                            if(txtForecastedEndDate.value!=""){
+                                                ForecastedEndDate=formatDate(txtForecastedEndDate.value);
+                                            }
+                                           // alert(ForecastedStartDate);
+                                           // alert(ForecastedEndDate);
+                                            if(ForecastedStartDate!="" && ForecastedEndDate==""){
+                                                alert("Please enter Forecasted Service Delivery Period End Date.");
+                                                return false;
+                                            }else if(ForecastedStartDate=="" && ForecastedEndDate!=""){
+                                                alert("Please enter Forecasted Service Delivery Period Start Date.");
+                                                return false;
+                                            }else if(ForecastedStartDate!="" && ForecastedEndDate!="" && ForecastedEndDate<ForecastedStartDate){
+                                                alert("Forecasted Service Delivery Period End Date must be greater than Start Date.");
+                                                return false;
+                                            }
+                                            //alert('final');
+                                           // return false;
+                                        }   
+                                        function formatDate(Date1){
+                                            try{
+                                                var strDate = '';
+                                                var array
+                                                if(Date1.lastIndexOf('/')!=-1){                                                
+                                                    array = Date1.split('/');
+                                                }else if(Date1.lastIndexOf('.')!=-1){                                                
+                                                    array = Date1.split('.');
+                                                }
+                                                var dd = array[0];
+                                                var mm = array[1];
+                                                var yyyy = array[2];
+                                                strDate = yyyy + "-" + mm + "-" + dd;
+                                                return strDate;
+                                            }catch(err){
+                                               // alert("Please enter valid date.");
+                                                return null;
+                                            }            
+                                        }
+                                        function ValidateLOE(selPeriodStartID,selPeriodStartYearID,selPeriodEndID,selPeriodEndYearID,txtForecastedStartDateID,txtForecastedEndDateID){
+                                           // alert('testing...');
+                                            if(ValidateDates(selPeriodStartID,selPeriodStartYearID,selPeriodEndID,selPeriodEndYearID,txtForecastedStartDateID,txtForecastedEndDateID)==false){
+                                                return false;
+                                            }
+                                            var size='{!lstwrapServicesType[intIndexST].lstwrapServices[intIndex].lstwrapResource.size}';
+                                            var WpStatus = '{!LFA_Work_Plan__c.Status__c}';
+                                            var checkvalodate = true;
+                                            var ContactArray = new Array();
+                                            var intArrayIndex = 0;
+                                            for(var i=0;i<size;i++){
+                                               if(document.getElementById('page:frm:pBlock:pbtable:'+i+':txtLOE').value == 0 && WpStatus == 'CT Planning'){
+                                                   alert('The LOE for a resource cannot be blank.');
+                                                   checkvalodate = false;
+                                                   return false;
+                                               }
+                                               if(document.getElementById('page:frm:pBlock:pbtable:'+i+':ContactList').value != 'TBD'){
+                                                   ContactArray[intArrayIndex] = document.getElementById('page:frm:pBlock:pbtable:'+i+':ContactList').value +';'+document.getElementById('page:frm:pBlock:pbtable:'+i+':Rolelist').value;
+                                                   intArrayIndex++;
+                                               }
+                                            }
+                                            
+                                            for(var j=0;j<ContactArray.length;j++){
+                                                for(var k=0;k<ContactArray.length;k++){
+                                                    if(j != k && ContactArray[j] == ContactArray[k]){
+                                                       alert('Each contact can only be assigned once to a service.');
+                                                       checkvalodate = false;
+                                                       return false;
+                                                    }
+                                                }
+                                            }
+                                            if(checkvalodate == true){
+                                               actSaveResources();
+                                               return false;
+                                            }
+                                        }  
+                                        function toggleDescPopup(PopUp){
+                                            var el = document.getElementById(PopUp);                              
+                                            if (el.style.display != 'none') {
+                                                el.style.display = 'none';
+                                            }
+                                            else {
+                                                el.style.display = '';
+                                            }
+                                        }
+                                        function blankInputFieldText(){
+                                            var inputfield = document.getElementById('page:frm:pBlock:txtComments');
+                                            inputfield.value = '';
+                                        }                                  
+                                        </script>
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="resourcetTable">
+                            <div id="boxscroll" class="chatterFeedPanel">
+                                <apex:iframe id="ifResourceChatter" height="225px" scrolling="true" rendered="{!if(blnHasChild==true,true,false)}" src="/apex/ServiceChatter?ServiceId={!if(blnHasChild==true,lstwrapServicesType[intIndexST].lstwrapServices[intIndex].objService.Id,'')}" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:pageBlock id="pbSearch" rendered="{!if($Profile.Name == 'Country Team' && lstWorkPlanToUpdate[0].Country_Team_can_edit__c == false,false,true)}">
+            <div class="pbHeader ">
+                <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="1%">
+                                <apex:inputHidden id="CollapseStatusSearch" value="{!blnExpandSectionSearch}" />
+                                <apex:outputpanel id="collapseimageSearch" style="display:{!if(blnExpandSectionSearch == true,'none','')};">
+                                    <apex:image styleClass="ImageSearch" url="{!$Resource.Collepse}" onclick="switchMenu('inlinetableSearchsec','{!$Component.ExpandimageSearch}','{!$Component.collapseimageSearch}','{!$Component.CollapseStatusSearch}','true')" title="Expand"/>
+                                </apex:outputpanel>
+                                <apex:outputpanel id="ExpandimageSearch" style="display:{!if(blnExpandSectionSearch == true,'','none')};">
+                                    <apex:image styleClass="ImageSearch" url="{!$Resource.Expand}" onclick="switchMenu('inlinetableSearchsec','{!$Component.collapseimageSearch}','{!$Component.ExpandimageSearch}','{!$Component.CollapseStatusSearch}','false')" title="Collapse"/>
+                                </apex:outputpanel>
+                            </td >
+                            <td  class="pbTitle" width="99%" style="float:left;">
+                                <h2 class="mainTitle">Service Library</h2>
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <table cellspacing="0" cellpadding="0" border="0" width="100%"  id="inlinetableSearchsec" style="display:{!if(blnExpandSectionSearch  == true,'','none')};">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <apex:selectList styleClass="picklist"  size="1" value="{!SelectedServiceTypeSearching}">
+                                        <apex:selectOptions value="{!ServiceSubTypeSearchingOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                <td class="blankCell"></td>
+                                <td>
+                                    <apex:selectList styleClass="picklist" size="1" value="{!SelectedRegion}">
+                                        <apex:selectOptions value="{!RegionOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                <td class="blankCell"></td>
+                                <td>
+                                    <apex:selectList styleClass="picklist" size="1" value="{!SelectedCountry}">
+                                        <apex:selectOptions value="{!CountryOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                <td class="blankCell"></td>
+                                <td>
+                                    <apex:selectList styleClass="yearPicklist" size="1" value="{!SelectedYear}">
+                                        <apex:selectOptions value="{!YearOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                <td class="blankCell"></td>
+                                
+                                <td>
+                                    <apex:selectList styleClass="picklist" size="1" value="{!SelectedLFA}">
+                                        <apex:selectOptions value="{!LFAOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                
+                                <td class="blankCell"></td>
+                                <td class="blankCell"></td>
+                                <td>
+                                    <apex:commandButton id="btnAnalyse" value="Analyse" action="{!AnalyseSearch}" reRender="frm" status="Processing" />
+                                </td>
+                                <td>
+                                    <apex:commandButton id="btnClearFilterSearch" value="Clear Filter" action="{!ClearFilterSearchGrid}" reRender="frm" status="Processing" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:selectList styleClass="picklist" size="1" value="{!SelectedFinancialRisk}">
+                                        <apex:selectOptions value="{!FinancialRiskOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                <td class="blankCell"></td>
+                                <td>
+                                    <apex:selectList styleClass="picklist" size="1" value="{!SelectedHealthRisk}">
+                                        <apex:selectOptions value="{!HealthRiskOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                                <td class="blankCell"></td>
+                                <td>
+                                    <apex:selectList styleClass="picklist" size="1" value="{!SelectedProgramaticRisk}">
+                                        <apex:selectOptions value="{!ProgramaticRiskOptions}"></apex:selectOptions>
+                                    </apex:selectList>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td>
+                        <table id="ServiceTable" width="100%" cellspacing="0" cellpadding="0" border="0" class="list">
+                            <thead class="rich-table-thead">
+                                <tr>
+                                    <th style="background-color:#F8F8F8;border:none;" colspan="6"><apex:commandButton value="Add to Work Plan" action="{!AddServiceToWorkPlan}" reRender="frm" status="Processing"/></th>
+                                    <th class="headerRowUpper" style="border-bottom:0px !important;text-align:center;" colspan="3">Risks</th>
+                                    <th style="background-color:#F8F8F8;border:none;" colspan="3"></th>
+                                </tr>
+                                <tr class="headerRow">
+                                    <th width="2%" class="headerColorSearchGrid" style="text-align:center;">
+                                        <apex:inputCheckbox id="CheckAll" onclick="CheckAll(this);"/>
+                                    </th>
+                                    <th width="13%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Service{!IF(sortExpression == 'Name',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="Name" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="10%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Region{!IF(sortExpression == 'LFA_Work_Plan__r.Country__r.Region_name__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="LFA_Work_Plan__r.Country__r.Region_name__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="10%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Country{!IF(sortExpression == 'LFA_Work_Plan__r.Country__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="LFA_Work_Plan__r.Country__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="10%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                    
+                                        <apex:commandLink action="{!sortData}"  value="Grant{!IF(sortExpression == 'Grant__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="Grant__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="6%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Year{!IF(sortExpression == 'LFA_Work_Plan__r.Year__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="LFA_Work_Plan__r.Year__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="7%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Financial & Fiduciary{!IF(sortExpression == 'Grant__r.Financial_and_Fiduciary_Risks__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="Grant__r.Financial_and_Fiduciary_Risks__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="7%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Programmatic & Performance{!IF(sortExpression == 'Grant__r.Programmatic_and_Performance_Risks__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="Grant__r.Programmatic_and_Performance_Risks__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="7%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Health Services & Products{!IF(sortExpression == 'Grant__r.Health_Services_and_Products_Risks__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="Grant__r.Health_Services_and_Products_Risks__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>                                    
+                                    <th width="8%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="LFA{!IF(sortExpression == 'LFA_Work_Plan__r.LFA__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="LFA_Work_Plan__r.LFA__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="8%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="LOE{!IF(sortExpression == 'LOE__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="LOE__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                    <th width="8%" class="headerColorSearchGrid" style="border-left:0px !important;">
+                                        <apex:commandLink action="{!sortData}"  value="Cost{!IF(sortExpression == 'Cost__c',IF(sortDirection=='ASC','▼','▲'),'')}" status="Processing" reRender="frm" >
+                                            <apex:param value="Cost__c" name="column" assignTo="{!sortExpression}"></apex:param>
+                                        </apex:commandLink>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat id="repSearch" value="{!lstServiceForSearch}" var="SearchService">
+                                    <tr>
+                                        <td class="dataCell" style="text-align:center;white-space: nowrap;border-bottom:1px solid #E0E3E5;border-left:1px solid #E0E3E5;">
+                                            <apex:inputCheckbox id="inpCheck" value="{!SearchService.IsChecked}" onclick="uncheckAll('{!$Component.CheckAll}');"/>
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputField value="{!SearchService.objSearchService.Name}"/>
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputText value="{!SearchService.objSearchService.LFA_Work_Plan__r.Country__r.Region_Name__c}"/>
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputText value="{!SearchService.objSearchService.LFA_Work_Plan__r.Country__r.Name}"/>
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputtext value="Multiple Grants" style="display:{!if(isblank(SearchService.objSearchService.Grant__c),'','none')}"/>
+                                            <apex:outputText value="{!SearchService.objSearchService.Grant__r.Name}" style="display:{!if(isblank(SearchService.objSearchService.Grant__c),'none','')}"/>  
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputText value="{!SearchService.objSearchService.LFA_Work_Plan__r.Year__c}"/>  
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;background-color:{!if(SearchService.objSearchService.Grant__r.Financial_and_Fiduciary_Risks__c == 'High','red',if(SearchService.objSearchService.Grant__r.Financial_and_Fiduciary_Risks__c == 'Medium','yellow',if(SearchService.objSearchService.Grant__r.Financial_and_Fiduciary_Risks__c == 'Low','lightgreen','')))}">
+                                            <apex:outputField value="{!SearchService.objSearchService.Grant__r.Financial_and_Fiduciary_Risks__c}"/>
+                                        </td>    
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;background-color:{!if(SearchService.objSearchService.Grant__r.Programmatic_and_Performance_Risks__c == 'High','red',if(SearchService.objSearchService.Grant__r.Programmatic_and_Performance_Risks__c == 'Medium','yellow',if(SearchService.objSearchService.Grant__r.Programmatic_and_Performance_Risks__c == 'Low','lightgreen','')))}">
+                                            <apex:outputField value="{!SearchService.objSearchService.Grant__r.Programmatic_and_Performance_Risks__c}"/>
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;background-color:{!if(SearchService.objSearchService.Grant__r.Health_Services_and_Products_Risks__c == 'High','red',if(SearchService.objSearchService.Grant__r.Health_Services_and_Products_Risks__c == 'Medium','yellow',if(SearchService.objSearchService.Grant__r.Health_Services_and_Products_Risks__c == 'Low','lightgreen','')))}">
+                                            <apex:outputField value="{!SearchService.objSearchService.Grant__r.Health_Services_and_Products_Risks__c}"/>
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputField value="{!SearchService.objSearchService.LFA_Work_Plan__r.LFA__c}"/>  
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;">
+                                            <apex:outputField value="{!SearchService.objSearchService.PO_LOE__c}"/>  
+                                        </td>
+                                        <td class="dataCell" style="border-bottom:1px solid #E0E3E5;border-right:1px solid #E0E3E5;">
+                                            <apex:outputField value="{!SearchService.objSearchService.PO_Cost__c}"/>
+                                       </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                            <tfoot id="saerchfooter" style="display:{!if(lstServiceForSearch.size > 0,'','none')}">
+                                <tr class="totalRow">
+                                    <th class="totalRow" rowspan="4"></th>
+                                    <th class="totalRow" colspan="{!if(SelectedServiceTypeSearching == '','11','8')}" rowspan="4" style="vertical-align:top;">
+                                        <apex:commandButton value="Add to Work Plan" action="{!AddServiceToWorkPlan}" reRender="frm" status="Processing"/>
+                                    </th>
+                                </tr>
+                                <tr class="totalRow" style="display:{!if(SelectedServiceTypeSearching != '','','none')}">
+                                    <th class="totalRowMinMaxAvg">
+                                        <apex:outputText value="Min: "/>
+                                    </th>
+                                    <th class="totalRow">
+                                        <apex:outputText value="{!MinLOE}"/>
+                                    </th>
+                                    <th class="totalRow">
+                                        <apex:outputText value="USD {0, number,###,###,##0}">
+                                            <apex:param value="{!MinCost}"/>
+                                        </apex:outputText>
+                                    </th>
+                                </tr>
+                                
+                                <tr class="totalRow" style="display:{!if(SelectedServiceTypeSearching != '','','none')}">
+                                    <th class="totalRowMinMaxAvg">
+                                        <apex:outputText value="Max: "/>
+                                    </th>
+                                    <th class="totalRow">
+                                        <apex:outputText value="{!MaxLOE}"/>
+                                    </th>
+                                    <th class="totalRow">
+                                        <apex:outputText value="USD {0, number,###,###,##0}">
+                                            <apex:param value="{!MaxCost}"/>
+                                        </apex:outputText>
+                                    </th>
+                                </tr>
+                                <tr class="totalRow" style="display:{!if(SelectedServiceTypeSearching != '','','none')}">
+                                    <th class="totalRowMinMaxAvg">
+                                        <apex:outputText value="Avg: "/>
+                                    </th>
+                                    <th class="totalRow">
+                                        <apex:outputText value="{!AvgLOE}"/>
+                                    </th>
+                                    <th class="totalRow">
+                                        <apex:outputText value="USD {0, number,###,###,##0}">
+                                            <apex:param value="{!AvgCost}"/>
+                                        </apex:outputText>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            </table>     
+        </apex:pageBlock>
+        
+        <style>
+        .ProcessingBackground
+        {
+            background-color: black;
+            opacity: 0.50;
+            filter: alpha(opacity = 50);
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 9999;
+            top:0;
+            left:0;
+        }
+        .Processing
+        {
+            z-index: 9999;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            position: fixed;
+        }        
+        </style>
+        <div id="divProcessing" style="display:none;">
+            <div class="ProcessingBackground"></div>
+            <div class="Processing">
+                <apex:image alt="Processing" url="{!$Resource.LoadingCircle}" />
+            </div>
+        </div>  
+        <apex:actionStatus id="Processing" onstart="document.getElementById('divProcessing').style.display = '';" onstop="document.getElementById('divProcessing').style.display = 'none';">                            
+        </apex:actionStatus> 
+        
+    <script type="text/javascript">  
+        alternate();
+        function CheckAll(CheckAllId){
+            var TotalRows = '{!lstServiceForSearch.size}';
+            for(var i=0;i<TotalRows;i++){
+                if(CheckAllId.checked == true){
+                    document.getElementById('page:frm:pbSearch:repSearch:'+i+':inpCheck').checked = true;
+                }else{
+                    document.getElementById('page:frm:pbSearch:repSearch:'+i+':inpCheck').checked = false;
+                }   
+            }
+        }
+        function uncheckAll(CheckAllId){
+            var TotalRows = '{!lstServiceForSearch.size}';
+            Count = 0;
+            for(var i=0;i<TotalRows;i++){
+                if(document.getElementById('page:frm:pbSearch:repSearch:'+i+':inpCheck').checked == true){
+                    Count ++;
+                }
+            }
+            if(Count == TotalRows){
+                document.getElementById(CheckAllId).checked = true;
+            }else{
+                document.getElementById(CheckAllId).checked = false;
+            }
+        }
+        
+         function setPopupheight(){
+            var strmsg = '{!strMessage}';
+            if(strmsg != ''){
+                alert(strmsg);
+                return false;
+            }
+            var offsetheight = document.getElementById('page:frm:hdnintOffsetTop').value;
+            offsetheight -= 350;
+           
+            document.getElementById('page:frm:custPopup').style.top = offsetheight + 'px';
+        }   
+        function setPopupheightSave(){
+            var offsetheight = document.getElementById('page:frm:hdnsetTop').value;
+            offsetheight -= 150;
+            document.getElementById('page:frm:custPopup').style.top = offsetheight+'px';
+        }   
+        function alternate(){ 
+            if(document.getElementsByTagName){  
+                var table = document.getElementById("ServiceTable");   
+                var rows = table.getElementsByTagName("tr"); 
+                for(i = 0; i < rows.length; i++){    
+                    if(i == rows.length-1){
+                        //rows[i].className = "footer"; 
+                    }else{
+                        if(i % 2 == 0){ 
+                                rows[i].className = rows[i].className + " even "; 
+                           
+                        }else{ 
+                            rows[i].className = rows[i].className + " odd "; 
+                        }  
+                    }     
+                } 
+            } 
+        }    
+      
+    </script>
+        
+    </apex:form>
+    
+    <style type="text/css">
+         .custPopup{
+            background-color: white;
+            border-width: 0px;
+            border-radius:10px;
+            border-style: solid;
+            /*z-index: 9999;*/
+            z-index: 51;
+            left: 22%;
+            padding:10px;
+            position: absolute;
+            top:50%;
+            width:60%;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /*z-index: 9998;*/
+            z-index: 50;
+            top: 0;
+            left: 0;
+           
+        }
+         .chatterFeedPanel{
+            height: 225px !important;
+        }      
+    </style>
+    <script>
+        /*window.onload = winLoad();
+        
+        var hidden1;
+        var hidden2;
+        function winLoad(){
+           hidden1 = document.getElementById('page:frm:pageB:hdnblnShowCTPlanned');
+           hidden2 = document.getElementById('page:frm:pageB:hdnblnShowTGF')
+        }*/
+        
+        function DeleteService(DeleteIndex,DeleteSTIndex){
+            
+            if(confirm('Are you sure you want to delete?'))
+            {
+                callDeleteService(DeleteIndex,DeleteSTIndex);  
+            }
+            return false;
+        }
+        function DeleteResource(DeleteResourceIndex){
+            if(confirm('Are you sure you want to delete?'))
+            {
+                callDeleteResource(DeleteResourceIndex);  
+            }
+            return false;
+        }
+        function DuplicateService(DuplicateIndex,DuplicateSTIndex,ServiceId){
+            if(confirm('Are you sure you want to Duplicate?'))
+            {
+                callDuplicateService(DuplicateIndex,DuplicateSTIndex,ServiceId);  
+            }
+            return false;
+        }
+        
+        function EditResource(editid,EditIndex,EditSTIndex){
+            var offsetTrail = editid;
+            var offsetTop = 0;
+            while (offsetTrail) {
+                offsetTop += offsetTrail.offsetTop;
+                offsetTrail = offsetTrail.offsetParent;
+            }
+            document.getElementById('page:frm:hdnintOffsetTop').value = offsetTop;
+            document.getElementById('page:frm:hdnIndex').value = EditIndex;
+            document.getElementById('page:frm:hdnIndexST').value = EditSTIndex;
+            
+            callEditService(EditIndex,EditSTIndex);
+            
+        }
+        function FillContact(ResourceIndex){
+            afFillContactsOnChangeRole(ResourceIndex);
+        }
+        function FillRate(ResourceIndexForRate){
+            afFillRateOnChangeContact(ResourceIndexForRate);
+        }
+        
+        function switchMenu(obj,obj1,obj2,hdn,val) 
+        {   
+            document.getElementById(hdn).value=val; 
+            var el = document.getElementById(obj); 
+                            
+            if(el.style.display != 'none' ) {
+                el.style.display = 'none';
+            }
+            else {
+                el.style.display = '';
+            }
+            var e2 = document.getElementById(obj1);                                       
+            if ( e2.style.display != 'none' ) {
+                e2.style.display = 'none';
+            }
+            else {
+                e2.style.display = '';
+            }
+            var e3 = document.getElementById(obj2);                                       
+            if ( e2.style.display != 'none' ) {
+                e3.style.display = 'none';
+            }
+            else {
+                e3.style.display = '';
+            }
+        }
+        function switchMenuResource(obj,HeaderId,obj1,obj2,hdn,val) 
+        {   
+            document.getElementById(hdn).value=val; 
+            
+            var el = document.getElementById(obj); 
+            if(el.style.display != 'none' ) {
+                var node = el.parentNode.childNodes;
+                for (var i = 0; i < node.length;  i++){
+                    if(node[i].id == el.id){
+                        node[i].style.display = 'none';
+                    }
+                }
+            }else{
+                var node = el.parentNode.childNodes;
+                for (var i = 0; i < node.length;  i++){
+                    if(node[i].id == el.id){
+                        node[i].style.display = '';
+                    }
+                }
+            } 
+            
+            var header = document.getElementById(HeaderId); 
+            if(header.style.display != 'none' ) {
+                var node = header.parentNode.childNodes;
+                for (var i = 0; i < node.length;  i++){
+                    if(node[i].id == header.id){
+                        node[i].style.display = 'none';
+                    }
+                }
+            }else{
+                var node = header.parentNode.childNodes;
+                for (var i = 0; i < node.length;  i++){
+                    if(node[i].id == header.id){
+                        node[i].style.display = '';
+                    }
+                }
+            } 
+            
+            var e2 = document.getElementById(obj1);                                       
+            if ( e2.style.display != 'none' ) {
+                e2.style.display = 'none';                
+            }
+            else {
+                e2.style.display = '';
+            }
+            var e3 = document.getElementById(obj2);                                       
+            if ( e2.style.display != 'none' ) {
+                e3.style.display = 'none';
+            }
+            else {
+                e3.style.display = '';
+            }
+            
+        }
+        function validate(SubTypeId,SaveServiceIndex,SaveServiceTypeIndex,editid,e){
+            if(document.getElementById(SubTypeId).value == ''){
+                alert('Service Type must not blank');
+                return false;
+            }else{
+                /*var offsetTrail = editid;
+                var offsetTop = 0;
+                while (offsetTrail){
+                    offsetTop += offsetTrail.offsetTop;
+                    offsetTrail = offsetTrail.offsetParent;
+                }*/
+                document.getElementById('page:frm:hdnsetTop').value = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+                actSaveServiceAndAddResources(SaveServiceIndex,SaveServiceTypeIndex);
+                return false;
+            }
+        }
+    
+        function ColumnExpandCollepse(tdId,thId,Mainth,sideTh,hdn,Status){
+            var AllTD = document.getElementsByTagName("td");
+            var AllTH = document.getElementsByTagName("th");
+            
+            if(tdId == 'CTtd')
+                document.getElementById('page:frm:hdnblnShowCTPlanned').value = Status;
+            if(tdId == 'TGFtd')
+                document.getElementById('page:frm:hdnblnShowTGF').value = Status;
+            for(var i=0;i<AllTD.length;i++){
+                if(AllTD[i].id == tdId){
+                    if(Status == 'false'){
+                        AllTD[i].style.display = 'none';
+                    }else{
+                        AllTD[i].style.display = '';
+                    }
+                }
+            }
+            for(var i=0;i<AllTH.length;i++){
+                if(AllTH[i].id == thId){
+                    if(Status == 'false'){
+                        AllTH[i].style.display = 'none';
+                    }else{
+                        AllTH[i].style.display = '';
+                    }
+                }
+            }
+            if(Status == 'false'){
+                document.getElementById(Mainth).style.display = 'none';
+                document.getElementById(sideTh).style.display = '';
+            }else{
+                document.getElementById(sideTh).style.display = 'none';
+                document.getElementById(Mainth).style.display = '';
+            }
+        }
+        function toggleDescService(PopUp){
+            var el = document.getElementById(PopUp);                              
+            if (el.style.display != 'none') {
+                el.style.display = 'none';
+            }
+            else {
+                el.style.display = '';
+            }
+        }
+        //winLoad();
+        function winLoad(){
+            alert(document.getElementById('page:frm:pageB:ServiceType').childNodes[0].label);
+            document.getElementById('page:frm:pageB:ServiceType').childNodes[0].label = 'All Service Types';
+            alert(document.getElementById('page:frm:pageB:ServiceType').childNodes[0].label);
+            /*if(document.getElementById('page:frm:pageB:ServiceType').childNodes[0] != null){
+                document.getElementById('page:frm:pageB:ServiceType').childNodes[0].label = 'All Service Types';
+                
+                document.getElementById('page:frm:pageB:ServiceType').style.width = 200px;
+            }*/
+        }
+       /* $(document).bind("DOMSubtreeModified", function() {
+            alert("tree changed");
+        });*/
+        
+        function addCommas(nStr){
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+        function RemoveComma(CostValue){                
+            var ReComma = new RegExp("\\,","g");
+            var ReQuate = new RegExp("\\'","g");
+            CostValue = CostValue.replace(ReComma,"");
+            CostValue = CostValue.replace(ReQuate,"");
+            CostValue = CostValue.replace(",.",".");
+            CostValue = CostValue.replace("'.",".");
+            CostValue = CostValue.replace("USD","");
+            return CostValue;
+        }
+        function UpdateTotalBudget(txtBudgetedODC,BudgetedLaborId,TotalBudgetID){
+            var BudgetedODCVal;
+            var txtBudgetedODCVal = RemoveComma(txtBudgetedODC.value);
+            if(txtBudgetedODCVal !="" && isNaN(txtBudgetedODCVal)==false){
+                BudgetedODCVal = parseInt(txtBudgetedODCVal);
+            }else{
+                BudgetedODCVal = 0;
+            }
+            var BudgetedLaborVal;
+            var lblBudgetedLabor = document.getElementById(BudgetedLaborId);
+            var lblBudgetedLaborVal =  RemoveComma(lblBudgetedLabor.innerHTML);
+            if(lblBudgetedLaborVal !="" && isNaN(lblBudgetedLaborVal)==false){
+                BudgetedLaborVal = parseInt(lblBudgetedLaborVal);
+            }else{
+                BudgetedLaborVal = 0;
+            }
+            document.getElementById(TotalBudgetID).innerHTML='USD ' + addCommas(BudgetedODCVal + BudgetedLaborVal);      
+        }
+    </script>
+    <script>
+        function setFocusOnLoad() {}
+        function ShowDeleteMessage(){
+            var strmsg = '{!strMessage}';
+            if(strmsg != ''){
+                alert(strmsg);
+            }
+        }
+        
+        function SetCss(){
+            if (navigator.appName == "Microsoft Internet Explorer"){
+                document.getElementById("CTCollepsed").className=document.getElementById("CTCollepsed").className+" box_CT_IE";
+            }
+        }
+        $(document).ready(SetCss);   
+    </script>
+    <script type="text/javascript">
+        var maxLength=330;
+        function charLimit(el) {
+            var charCount = document.getElementById('charCount');
+            if(el.value.length >= maxLength){
+                charCount.style.color = "red";
+            }else{
+                charCount.style.color = "black";
+            }
+            if (el.value.length > maxLength){
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function characterCount(el) {
+        var charCount = document.getElementById('charCount');
+        if (el.value.length > maxLength) el.value = el.value.substring(0,maxLength);
+        if (charCount) charCount.innerHTML = 0 + el.value.length + "/" + maxLength;
+        return true;
+        }
+        
+        
+    </script>
+    
+    <style type="text/css">
+        span.dateInput span.dateFormat{
+            display:none;
+        }
+    </style>
+    
+</apex:page>
