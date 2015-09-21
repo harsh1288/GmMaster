@@ -20,7 +20,7 @@ var results = records.getArray('records');
 var variable; //NOW
 var testVariable;
 
-//test cpy folder. test 
+//test copy
 //No test variables. New line.
 
 
