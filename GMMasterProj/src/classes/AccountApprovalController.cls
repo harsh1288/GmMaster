@@ -20,7 +20,7 @@ public without sharing class AccountApprovalController {
     Public list<Contact> lstPrimaryContact {get;set;}
     public Contact contactCCMChair {get;set;}
     public Contact contactCCMCivilSociety {get;set;}
-
+	//test
     public Boolean FO {get;set;}
     public Id accountId;
     public Account acc {get;set;}
