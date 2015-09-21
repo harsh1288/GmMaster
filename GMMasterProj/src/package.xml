@@ -5,5 +5,9 @@
         <members>backtoIP_Mobile</members>
         <name>ApexPage</name>
     </types>
+    <types>
+        <members>AccountBeforeInsertUpdate</members>
+        <name>ApexTrigger</name>
+    </types>
     <version>34.0</version>
 </Package>
