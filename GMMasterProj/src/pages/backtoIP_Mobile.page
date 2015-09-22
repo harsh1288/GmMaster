@@ -5,7 +5,7 @@
 window.onload= loadValues();
 function loadValues(){
     
-Var testCRMONLY;
+
 //var Affrecords = sforce.connection.query("SELECT Id,Implementation_Period__c from Performance_Framework__c"); 
 
 //var Affresults = Affrecords.getArray('records');
@@ -15,9 +15,6 @@ Var testCRMONLY;
     var urlLFA ='/LFA/Performance_Framework__c.Implementation_Period__c'; 
     
     var url ='/'+'{!Performance_Framework__c.Implementation_Period__c}'; 
-    
-    var lfaAccess; //New variable
-    var onlyRegardinfSpA5; // new var 
     
     if('{!$User.ContactId}'== ''){ 
     

@@ -20,39 +20,8 @@ var results = records.getArray('records');
 var variable; //NOW
 var testVariable;
 
-//There is a new comment here... 
-
- 
+//test copy
 //No test variables. New line.
-
-//This a test comment from MG Sprint5. 
-  
-//test new changes..
-//some changes.more.few mre changes 
-
-
-//sdjfhjdh hj jk.cvnbcmbncvm This is a comment to conflict. 
-  
-//test harsh added some new comments. new changes
-
-//test 
-
-//test. This is a comment to conflict.
-  
-//test harsh added some new comments.
-
-
-//Harsh started a new piece of work.
-
-//Harsh is adding a little more changes into his dev work. // This is the change added by Harsha.
-
-
-//Harsh started a new piece of work.
-
-//Harsh is adding a little more changes into his dev work. // This is the change added by Harsha.
-
-
-
 
 
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
