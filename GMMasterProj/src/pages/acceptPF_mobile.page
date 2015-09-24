@@ -25,7 +25,7 @@ var testVariable;//test
 //No test variables. New line.
 
 
-// this line is added only in the GMWork Repo test new word.
+// this line is added only in the GMWork Repo test new word.test
 
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
