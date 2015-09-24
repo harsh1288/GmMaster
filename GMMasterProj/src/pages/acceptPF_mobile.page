@@ -4,6 +4,7 @@
 
 <script>
 //Posted a header
+// Lets commint without delete
 window.onload= loadValues();
 function loadValues(){
  sforce.connection.sessionId = "{!$Api.Session_ID}";    
@@ -23,7 +24,7 @@ var testVariable;//test
 //test no new texxt
 //No test variables. New line.
 
-// this line is added only in the NEWSPrintBranch.
+// this line is added only in the GMWork Repo test new word.
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
 alert('PR Information Form and Grant Form must be approved to accept Performance Framework.'); 
