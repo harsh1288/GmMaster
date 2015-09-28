@@ -27,6 +27,7 @@ var testVariable;//test
 
 // this line is added only in the GMWork Repo test new word.test
 
+// this line is added only in the GMWork Repo test new word.
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
 alert('PR Information Form and Grant Form must be approved to accept Performance Framework.'); 
