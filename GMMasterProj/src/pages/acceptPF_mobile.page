@@ -21,13 +21,14 @@ var results = records.getArray('records');
 var variable; //NOW
 var testVariable;//test
 //test new comment testing git
+//test new comment. By Harsh for sprint 10
 //test no new texxt
 //No test variables. New line.
 // new change of GMSprint10 by Harsh.
 // Some more changes by Harsh.
 
 // this line is added only in the GMWork Repo test new word.test
-
+ 
 // this line is added only in the GMWork Repo test new word.
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
