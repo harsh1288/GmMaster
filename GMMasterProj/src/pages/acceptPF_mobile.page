@@ -20,7 +20,7 @@ var results = records.getArray('records');
 //alert(results);
 var variable; //NOW
 var testVariable;//test
-//test new comment
+//test new comment. By Harsh for sprint 10
 //test no new texxt
 //No test variables. New line.
 // new change of GMSprint10 by Harsh.
