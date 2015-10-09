@@ -4,6 +4,7 @@
 
 <script>
 //Posted a header
+// Lets commint without delete
 window.onload= loadValues();
 function loadValues(){
  sforce.connection.sessionId = "{!$Api.Session_ID}";    
@@ -11,25 +12,24 @@ function loadValues(){
 var PerStatus = new sforce.SObject("Performance_Framework__c"); 
 PerStatus.Id = "{! Performance_Framework__c.Id}";
 var GIPId ="{! Performance_Framework__c.Implementation_Period__c}";
-//window.alert(GIPId); 
+//window.alert(GIPId);  
 //var BudStatus = new sforce.SObject("Performance_Framework__c"); 
 var BudStatus  = "{!Performance_Framework__c.Id}"; 
 var records = sforce.connection.query("SELECT Implementation_Period__r.Approval_Status__c,Id from Performance_Framework__c where id ='"+BudStatus+"' limit 1"); 
 var results = records.getArray('records'); 
 //alert(results);
 var variable; //NOW
-//No test variables should be created.
+var testVariable;//test
+//test new comment testing git
+//test new comment. By Harsh for sprint 10
+//test no new texxt
+//No test variables. New line.
+// new change of GMSprint10 by Harsh.
+// Some more changes by Harsh.
 
-
-
-//some changes.more.few mre changes
-
-//test 
-
-//Harsh is adding a little more changes into his dev work.
-
-
-
+// this line is added only in the GMWork Repo test new word.test
+ 
+// this line is added only in the GMWork Repo test new word.
 if(results[0].Implementation_Period__r.Approval_Status__c!='Approved') 
 { 
 alert('PR Information Form and Grant Form must be approved to accept Performance Framework.'); 
@@ -58,7 +58,7 @@ var pfRecVar = pfRec.getArray("records");
 
 if(pfRecVar[0].Is_Changed_Submitted__c == 'true'){
 var cnf = confirm("{!$Label.PF_Accept_Popup_Changes}"); 
-
+//  new values 18/09
 
 if(cnf==true) 
 { 
@@ -80,12 +80,8 @@ sforce.one.navigateToURL(url);
 location.reload(true); //reload screen to reflect changes
 //}
 }
-}
-}
-
-//Last line: Harsh Chaturvedi
-
-//To be or not
+} 
+} 
 
 
     </script>

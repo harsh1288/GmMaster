@@ -5,7 +5,7 @@
 window.onload= loadValues();
 function loadValues(){
     
-Var testCRMONLY;
+//Comments only on GITHub
 //var Affrecords = sforce.connection.query("SELECT Id,Implementation_Period__c from Performance_Framework__c"); 
 
 //var Affresults = Affrecords.getArray('records');
