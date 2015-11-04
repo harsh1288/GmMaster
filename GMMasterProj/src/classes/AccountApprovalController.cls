@@ -6,6 +6,7 @@
 */
 // My first class on Git -Rashmi
 public without sharing class AccountApprovalController {
+	// New Comment -- AA
     
     public List<Account_Approval__c> lstAccountApprovals {get;set;}
     public Account_Approval__c currentApprovalRequest {get;set;}
