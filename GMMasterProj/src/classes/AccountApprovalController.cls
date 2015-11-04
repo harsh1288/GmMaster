@@ -4,7 +4,7 @@
     *@description  This class is used to approve the Account (PR)
     *@Used for     AccountApprovalController
 */
-
+// My first class on Git -Rashmi
 public without sharing class AccountApprovalController {
     
     public List<Account_Approval__c> lstAccountApprovals {get;set;}
